@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Login</title>
+<link rel="stylesheet" href="css/base.css">
+
+<style>
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--dark);
+}
+
+.auth-card {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 24px;
+  width: 400px;
+  border: 1px solid rgba(2,195,154,0.2);
+}
+
+.auth-card h2 {
+  font-family: 'DM Serif Display', serif;
+  margin-bottom: 1.5rem;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: white;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 100px;
+  background: var(--mint);
+  color: var(--dark);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.switch-text {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 id="authTitle">Login to PharmaTrack</h2>
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+
+    <button class="auth-btn" onclick="handleAuth()">Login</button>
+
+    <div class="switch-text" onclick="toggleMode()">
+      Don't have an account? Sign up
+    </div>
+  </div>
+</div>
+
+<script>
+let isLogin = true;
+
+function toggleMode(){
+  isLogin = !isLogin;
+  document.getElementById("authTitle").innerText =
+      isLogin ? "Login to PharmaTrack" : "Create PharmaTrack Account";
+
+  document.querySelector(".auth-btn").innerText =
+      isLogin ? "Login" : "Sign Up";
+
+  document.querySelector(".switch-text").innerText =
+      isLogin ? "Don't have an account? Sign up"
+              : "Already have an account? Login";
+}
+
+function handleAuth(){
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if(!user || !pass){
+    alert("Please fill all fields");
+    return;
+  }
+
+  if(isLogin){
+    const savedUser = localStorage.getItem("pt_user");
+    const savedPass = localStorage.getItem("pt_pass");
+
+    if(user === savedUser && pass === savedPass){
+      localStorage.setItem("pt_loggedIn", "true");
+      window.location.href = "index.html";
+    } else {
+      alert("Invalid credentials");
+    }
+  } else {
+    localStorage.setItem("pt_user", user);
+    localStorage.setItem("pt_pass", pass);
+    alert("Account created successfully!");
+    toggleMode();
+  }
+}
+</script>
+
+</body>
+</html>

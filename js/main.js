@@ -1,7 +1,18 @@
 /* ============================================
    PharmaTrack — Shared JS Utilities
    ============================================ */
+  // Authentication Check
+document.addEventListener("DOMContentLoaded", function () {
+  const isLoggedIn = localStorage.getItem("pt_loggedIn");
 
+  const publicPages = ["auth.html"];
+
+  const currentPage = window.location.pathname.split("/").pop();
+
+  if (!isLoggedIn && !publicPages.includes(currentPage)) {
+    window.location.href = "auth.html";
+  }
+});
 // Reveal on scroll
 function initReveal() {
   const reveals = document.querySelectorAll('.reveal');
@@ -30,9 +41,16 @@ function initActiveNav() {
     }
   });
 }
-
+ function logout(){
+  localStorage.removeItem("pt_loggedIn");
+  window.location.href = "auth.html";
+}
 // Init everything on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initActiveNav();
+
+ 
+
+
 });
