@@ -45,7 +45,8 @@ function initActiveNav() {
   localStorage.removeItem("pt_loggedIn");
   window.location.href = "auth.html";
 }
-// Init everything on DOM ready
+
+// Init everything on DOM ready 
 document.addEventListener('DOMContentLoaded', () => {
   initReveal();
   initActiveNav();
