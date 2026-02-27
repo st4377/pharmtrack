@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initActiveNav();
 });
 
-// ── Reveal on scroll ─────────────────────────
+// ── Reveal on scroll 
 function initReveal() {
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver(entries => {
