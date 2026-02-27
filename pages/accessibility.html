@@ -6,6 +6,26 @@
 <title>PharmaTrack — Accessibility & Support</title>
 <link rel="stylesheet" href="../css/base.css">
 <style>
+    /* Fix image alignment and sizing in cards */
+    .access-img-wrap {
+      width: 100%;
+      max-width: 120px;
+      height: 90px;
+      margin: 0 auto 1.2rem auto;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px rgba(30,201,163,0.10);
+    }
+    .access-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
   .page-hero {
     padding: 10rem 4rem 4rem;
     background: var(--navy);
@@ -134,17 +154,17 @@
 <section class="access-section">
   <div class="top-grid">
     <div class="access-card reveal">
-      <span class="access-icon">📍</span>
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=200&q=80" alt="Medicine strips" class="access-img"></div>
       <h3>Emergency Mode</h3>
       <p>Finds nearby hospitals using real-time live location data. Displays contact numbers, estimated distance, and the fastest route — reducing panic and critical response time during medical emergencies.</p>
     </div>
     <div class="access-card reveal">
-      <span class="access-icon">⚠️</span>
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=200&q=80" alt="Pills bottle" class="access-img"></div>
       <h3>Precautions & Safety Warnings</h3>
       <p>Provides drug-specific guidance for every medication. Example: Ibuprofen — warns against empty stomach consumption, advises caution for kidney conditions. Covers food interactions and activities to avoid.</p>
     </div>
     <div class="access-card reveal">
-      <span class="access-icon">🔗</span>
+      <div class="access-img-wrap"><img src="C:\Users\SAUMIL\Desktop\pharmatrack\images\capsule-warning.png" alt="QR code on medicine" class="access-img"></div>
       <h3>Safe Combination Guidance</h3>
       <p>Warns about unsafe drug-drug interactions in real time. Example: Advises against Iron + Calcium supplements together; recommends timed separation to prevent adverse reactions from polypharmacy.</p>
     </div>
@@ -152,12 +172,12 @@
 
   <div class="bottom-grid">
     <div class="access-card-wide reveal">
-      <span class="access-icon" style="font-size:2.2rem; display:block; margin-bottom:1.2rem;">📅</span>
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80" alt="Medicine reminder" class="access-img"></div>
       <h3>Medicine Cycle & Reminders</h3>
       <p>Users set up detailed cycles documenting dosage, frequency, and duration for each medication. Automated reminders prevent missed or repeated doses with fully customizable scheduling. Visual tracking of completed, upcoming, and missed doses across all prescribed medications.</p>
     </div>
     <div class="access-card-wide reveal">
-      <span class="access-icon" style="font-size:2.2rem; display:block; margin-bottom:1.2rem;">👴</span>
+      <div class="access-img-wrap"><img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80" alt="Accessible design" class="access-img"></div>
       <h3>Inclusive Design & Accessibility</h3>
       <p>Information presented with clear, intuitive icons and minimal text to reduce cognitive load. Designed specifically for the elderly, rural individuals, and non-technical users with large text and high-contrast UI. Universal usability is a core design principle, not an afterthought — every interaction is tested for ease of use.</p>
     </div>
@@ -177,21 +197,21 @@
           <div class="reminder-med">Metformin 500mg</div>
           <div class="reminder-time">After breakfast</div>
         </div>
-        <span class="reminder-status status-done">✓ Done</span>
+        <span class="reminder-status status-done">Done</span>
       </div>
       <div class="reminder-row">
         <div>
           <div class="reminder-med">Dolo 650</div>
           <div class="reminder-time">2:00 PM — with water</div>
         </div>
-        <span class="reminder-status status-next">⏱ Next</span>
+        <span class="reminder-status status-next">Next</span>
       </div>
       <div class="reminder-row">
         <div>
           <div class="reminder-med">Vitamin D3</div>
           <div class="reminder-time">7:00 AM — morning</div>
         </div>
-        <span class="reminder-status status-miss">✗ Missed</span>
+        <span class="reminder-status status-miss">Missed</span>
       </div>
       <div class="reminder-row">
         <div>

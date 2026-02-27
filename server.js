@@ -1,15 +1,19 @@
 require('dotenv').config();
-const express = require('express');
-const session = require('express-session');
+const express  = require('express');
+const session  = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const path = require('path');
-const fs = require('fs');
+const fs   = require('fs');
 
 const app = express();
 
 // ── USERS FILE — always relative to this file, not the terminal CWD ──
 const USERS_FILE = path.join(__dirname, 'users.json');
+
+// ── MIDDLEWARE ──
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback_secret',
@@ -21,6 +25,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// ── GOOGLE OAUTH STRATEGY ──
 passport.use(new GoogleStrategy({
   clientID:     process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -73,11 +78,13 @@ passport.use(new GoogleStrategy({
   return done(null, profile);
 }));
 
-passport.serializeUser((user, done) => done(null, user));
+passport.serializeUser((user, done)   => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
+// ── STATIC FILES ──
 app.use(express.static(path.join(__dirname)));
 
+// ── GOOGLE AUTH ROUTES ──
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
@@ -92,10 +99,51 @@ app.get('/auth/google/callback',
   }
 );
 
+// ── EMAIL LOGIN ROUTE ──
+app.post('/auth/email', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!fs.existsSync(USERS_FILE)) {
+    return res.redirect('/auth.html?error=nouserfile');
+  }
+
+  let users = [];
+  try {
+    users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+  } catch {
+    return res.redirect('/auth.html?error=readerror');
+  }
+
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) {
+    return res.redirect('/auth.html?error=invalid');
+  }
+
+  // Update login time / count
+  user.lastLogin  = new Date().toLocaleString();
+  user.loginCount = (user.loginCount || 1) + 1;
+  try {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  } catch {}
+
+  req.session.user = {
+    email:   user.email,
+    name:    user.name    || '',
+    isAdmin: user.isAdmin || false
+  };
+
+  const name  = encodeURIComponent(user.name  || '');
+  const photo = encodeURIComponent(user.photo || '');
+  // ✅ Always redirect to index.html after login
+  res.redirect(`/index.html?loggedIn=true&name=${name}&photo=${photo}&email=${encodeURIComponent(user.email)}`);
+});
+
+// ── LOGOUT ──
 app.get('/auth/logout', (req, res) => {
   req.logout(() => res.redirect('/auth.html'));
 });
 
+// ── ADMIN USERS PAGE ──
 app.get('/admin/users', (req, res) => {
   if (!fs.existsSync(USERS_FILE)) {
     return res.send('No users yet. Expected file at: ' + USERS_FILE);
@@ -132,10 +180,14 @@ app.get('/admin/users', (req, res) => {
   res.send(html);
 });
 
+// ── API ──
 app.get('/api/me', (req, res) => {
-  res.json(req.isAuthenticated() ? { loggedIn: true, user: req.user } : { loggedIn: false });
+  res.json(req.isAuthenticated()
+    ? { loggedIn: true,  user: req.user }
+    : { loggedIn: false });
 });
 
+// ── START ──
 app.listen(3000, () => {
   console.log('✅ PharmaTrack running on http://localhost:3000');
   console.log('📁 Users file will be saved to:', USERS_FILE);
