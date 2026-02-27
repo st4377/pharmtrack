@@ -140,33 +140,11 @@
   .alt-name { font-weight: 600; color: var(--white); font-size: 0.73rem; }
   .alt-sub { color: rgba(255,255,255,0.4); }
 
-  /* Module nav bar */
-  .module-bar {
-    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 0.5rem;
-    background: rgba(10, 22, 40, 0.92);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(2, 195, 154, 0.2);
-    border-radius: 100px;
-    padding: 0.5rem 1rem;
-    z-index: 200;
-  }
-  .module-bar a {
-    color: rgba(255,255,255,0.5);
-    text-decoration: none;
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 0.35rem 0.8rem;
-    border-radius: 100px;
-    transition: all 0.2s;
-  }
-  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
-  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
-
+   
   @media (max-width: 1100px) {
     .hero-visual { display: none; }
     .hero { padding: 7rem 2rem 4rem; }
-    .module-bar { display: none; }
+      
   }
 </style>
 </head>
@@ -179,23 +157,14 @@
     <li><a href="pages/safety.html">Safety</a></li>
     <li><a href="pages/accessibility.html">Accessibility</a></li>
     <li><a href="pages/sdg.html">Mission</a></li>
-    <li><a href="pages/tech.html">Tech Stack</a></li>
+    
     <li><a href="pages/tech.html" class="nav-cta">Login</a></li>
   </ul>
     <button class="btn-outline" onclick="logout()">Logout</button>
 
 </nav>
 
-<!-- MODULE BAR -->
-<div class="module-bar">
-  <a href="index.html" class="active">🏠 Home</a>
-  <a href="pages/problem.html">⚠️ Problem</a>
-  <a href="pages/features.html">✨ Features</a>
-  <a href="pages/safety.html">🛡️ Safety</a>
-  <a href="pages/accessibility.html">♿ Access</a>
-  <a href="pages/sdg.html">🌍 Mission</a>
-  <a href="pages/tech.html">⚙️ Tech</a>
-</div>
+
 
 <!-- HERO -->
 <section class="hero">
@@ -213,7 +182,7 @@
     </div>
     <div class="hero-actions">
       <a href="pages/features.html" class="btn-primary">Explore Features</a>
-      <a href="pages/tech.html" class="btn-outline">View Tech Stack</a>
+      
     </div>
   </div>
 

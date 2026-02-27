@@ -69,32 +69,18 @@
     border: 1px solid rgba(2,195,154,0.2);
   }
 
-  /* Category Divider */
-  .category-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    margin: 3rem 0 1.5rem;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .category-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,0.07);
-  }
-
   /* Summary Banner */
   .summary-grid {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    gap: 1.2rem; margin-top: 4rem;
-    padding: 2.5rem;
-    background: rgba(2,195,154,0.05);
-    border: 1px solid rgba(2,195,154,0.15);
-    border-radius: 24px;
-  }
+  display: grid; grid-template-columns: repeat(3, 200px);
+  gap: 1.2rem; margin-top: 4rem;
+  padding: 2.5rem 3rem;
+  background: rgba(2,195,154,0.05);
+  border: 1px solid rgba(2,195,154,0.15);
+  border-radius: 24px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
   .summary-item { text-align: center; }
   .summary-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--mint); }
   .summary-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
@@ -131,20 +117,11 @@
     <li><a href="safety.html">Safety</a></li>
     <li><a href="accessibility.html">Accessibility</a></li>
     <li><a href="sdg.html">Mission</a></li>
-    <li><a href="tech.html">Tech Stack</a></li>
-    <li><a href="tech.html" class="nav-cta">Login</a></li>
+
   </ul>
 </nav>
 
-<div class="module-bar">
-  <a href="../index.html">🏠 Home</a>
-  <a href="problem.html">⚠️ Problem</a>
-  <a href="features.html" class="active">✨ Features</a>
-  <a href="safety.html">🛡️ Safety</a>
-  <a href="accessibility.html">♿ Access</a>
-  <a href="sdg.html">🌍 Mission</a>
-  <a href="tech.html">⚙️ Tech</a>
-</div>
+
 
 <section class="page-hero">
   <div class="page-hero-bg"></div>
@@ -162,7 +139,6 @@
 
 <section class="features-section">
 
-  <div class="category-label reveal">Medicine Management</div>
   <div class="features-grid">
     <div class="feat-card-lg reveal">
       <span class="feat-icon-lg">🔄</span>
@@ -177,60 +153,29 @@
       <span class="feat-tag">Anti-Counterfeit</span>
     </div>
     <div class="feat-card-lg reveal">
-      <span class="feat-icon-lg">⚗️</span>
-      <h3>Combination Guide</h3>
-      <p>Real-time warnings about unsafe drug-drug interactions — prevent adverse reactions from uninformed polypharmacy.</p>
-      <span class="feat-tag">Safety Critical</span>
-    </div>
-    <div class="feat-card-lg reveal">
       <span class="feat-icon-lg">⏰</span>
       <h3>Dose Reminders</h3>
       <p>Personalized cycles with intelligent scheduling alerts — automated reminders prevent missed or repeated doses throughout the day.</p>
       <span class="feat-tag">Adherence</span>
     </div>
-  </div>
-
-  <div class="category-label reveal">Emergency & Safety</div>
-  <div class="features-grid">
     <div class="feat-card-lg reveal">
       <span class="feat-icon-lg">🚨</span>
       <h3>Emergency Mode</h3>
       <p>Nearby hospitals, optimal routes, and contact numbers — instantly accessible during critical medical situations to reduce panic.</p>
       <span class="feat-tag">Life-Saving</span>
     </div>
-    <div class="feat-card-lg reveal">
-      <span class="feat-icon-lg">🛡️</span>
-      <h3>Safety Warnings</h3>
-      <p>Drug-specific precautions, food interactions, and side effects — comprehensive guidance for every medication in your profile.</p>
-      <span class="feat-tag">Awareness</span>
-    </div>
-    <div class="feat-card-lg reveal">
-      <span class="feat-icon-lg">🌏</span>
-      <h3>Regional Languages</h3>
-      <p>Multi-language support for India's diverse population — breaking the English-only barrier that excludes rural and elderly users.</p>
-      <span class="feat-tag">Inclusivity</span>
-    </div>
-    <div class="feat-card-lg reveal">
-      <span class="feat-icon-lg">♿</span>
-      <h3>Inclusive Design</h3>
-      <p>Large text, high contrast, simple icons — designed for the elderly, rural individuals, and non-technical users from the ground up.</p>
-      <span class="feat-tag">Accessibility</span>
-    </div>
   </div>
 
   <div class="summary-grid reveal">
     <div class="summary-item">
-      <div class="summary-num">8</div>
+      <div class="summary-num">4</div>
       <div class="summary-label">Core Features</div>
     </div>
     <div class="summary-item">
       <div class="summary-num">∞</div>
       <div class="summary-label">Medicine Database</div>
     </div>
-    <div class="summary-item">
-      <div class="summary-num">10+</div>
-      <div class="summary-label">Regional Languages</div>
-    </div>
+   
     <div class="summary-item">
       <div class="summary-num">24/7</div>
       <div class="summary-label">Emergency Access</div>

@@ -1,19 +1,39 @@
 /* ============================================
    PharmaTrack — Shared JS Utilities
    ============================================ */
-  // Authentication Check
+
+// ── Logout — MUST be outside DOMContentLoaded to work globally ──
+function logout() {
+  sessionStorage.clear();
+  window.location.href = "/auth/logout";
+}
+
+// ── Auth check ───────────────────────────────
 document.addEventListener("DOMContentLoaded", function () {
-  const isLoggedIn = localStorage.getItem("pt_loggedIn");
-
   const publicPages = ["auth.html"];
-
   const currentPage = window.location.pathname.split("/").pop();
 
-  if (!isLoggedIn && !publicPages.includes(currentPage)) {
-    window.location.href = "auth.html";
+  // Check Google login via URL param (set after OAuth callback)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("loggedIn") === "true") {
+    sessionStorage.setItem("pt_loggedIn", "true");
+    sessionStorage.setItem("pt_name",  params.get("name")  || "");
+    sessionStorage.setItem("pt_photo", params.get("photo") || "");
+    sessionStorage.setItem("pt_email", params.get("email") || "");
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
+
+  const isLoggedIn = sessionStorage.getItem("pt_loggedIn");
+  if (!isLoggedIn && !publicPages.includes(currentPage)) {
+    window.location.href = "/auth.html";
+  }
+
+  initReveal();
+  initActiveNav();
 });
-// Reveal on scroll
+
+// ── Reveal on scroll ─────────────────────────
 function initReveal() {
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver(entries => {
@@ -31,7 +51,7 @@ function initReveal() {
   reveals.forEach(el => observer.observe(el));
 }
 
-// Highlight active nav link based on current page
+// ── Active nav link ───────────────────────────
 function initActiveNav() {
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
   document.querySelectorAll('nav ul li a').forEach(link => {
@@ -41,17 +61,3 @@ function initActiveNav() {
     }
   });
 }
- function logout(){
-  localStorage.removeItem("pt_loggedIn");
-  window.location.href = "auth.html";
-}
-
-// Init everything on DOM ready 
-document.addEventListener('DOMContentLoaded', () => {
-  initReveal();
-  initActiveNav();
-
- 
-
-
-});
