@@ -121,7 +121,7 @@
     <li><a href="accessibility.html">Accessibility</a></li>
     <li><a href="sdg.html">Mission</a></li>
     <li><a href="tech.html">Tech Stack</a></li>
-    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+    <li><a href="#" class="nav-cta" id="loginBtn">Login</a></li>
   </ul>
 </nav>
 
@@ -266,5 +266,45 @@
 </footer>
 
 <script src="../js/main.js"></script>
+</body>
+<!-- Login Modal -->
+<div id="loginModal" style="display:none;position:fixed;z-index:9999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;">
+  <div style="background:#102542;padding:2.5rem 2rem 2rem 2rem;border-radius:18px;max-width:350px;width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.25);position:relative;">
+    <button id="closeLoginModal" style="position:absolute;top:0.7rem;right:1rem;background:none;border:none;font-size:1.3rem;color:#fff;cursor:pointer;">&times;</button>
+    <h2 style="margin-bottom:1.2rem;font-size:1.3rem;color:#02C39A;text-align:center;">Login</h2>
+    <form id="loginForm">
+      <label for="loginName" style="color:#fff;font-size:0.95rem;">User Name</label>
+      <input type="text" id="loginName" name="loginName" required style="width:100%;margin-bottom:1rem;padding:0.5rem;border-radius:7px;border:1px solid #02C39A;background:#183153;color:#fff;">
+      <label for="loginEmail" style="color:#fff;font-size:0.95rem;">Email</label>
+      <input type="email" id="loginEmail" name="loginEmail" required style="width:100%;margin-bottom:1rem;padding:0.5rem;border-radius:7px;border:1px solid #02C39A;background:#183153;color:#fff;">
+      <label for="loginPassword" style="color:#fff;font-size:0.95rem;">Password</label>
+      <input type="password" id="loginPassword" name="loginPassword" required style="width:100%;margin-bottom:1.5rem;padding:0.5rem;border-radius:7px;border:1px solid #02C39A;background:#183153;color:#fff;">
+      <button type="submit" style="width:100%;padding:0.7rem 0;background:#02C39A;color:#102542;font-weight:700;border:none;border-radius:7px;font-size:1rem;cursor:pointer;">Login</button>
+    </form>
+  </div>
+</div>
+
+<script>
+// Modal open/close logic
+document.getElementById('loginBtn').onclick = function(e) {
+  e.preventDefault();
+  document.getElementById('loginModal').style.display = 'flex';
+};
+document.getElementById('closeLoginModal').onclick = function() {
+  document.getElementById('loginModal').style.display = 'none';
+};
+window.onclick = function(event) {
+  var modal = document.getElementById('loginModal');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
+// Demo login handler
+document.getElementById('loginForm').onsubmit = function(e) {
+  e.preventDefault();
+  alert('Logged in as: ' + document.getElementById('loginName').value + '\nEmail: ' + document.getElementById('loginEmail').value);
+  document.getElementById('loginModal').style.display = 'none';
+};
+</script>
 </body>
 </html>

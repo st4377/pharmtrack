@@ -3,88 +3,352 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PharmaTrack — Safety & Verification</title>
+<title>PharmaTrack — QR Scanner & Verification</title>
 <link rel="stylesheet" href="../css/base.css">
 <style>
-  .page-hero {
-    padding: 10rem 4rem 4rem;
-    background: rgba(2, 128, 144, 0.05);
-    border-bottom: 1px solid rgba(2, 195, 154, 0.1);
-    position: relative; overflow: hidden;
-  }
-  .page-hero::before { content: ''; position: absolute; top: -100px; left: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(2,195,154,0.07) 0%, transparent 70%); pointer-events: none; }
-  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
-  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
-  .breadcrumb a { color: var(--mint); text-decoration: none; }
-  .breadcrumb span { color: rgba(255,255,255,0.2); }
-  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -1px; animation: fadeUp 0.5s 0.1s ease both; }
-  .page-title em { font-style: italic; color: var(--mint); }
-  .page-sub { margin-top: 1.2rem; color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.7; max-width: 560px; animation: fadeUp 0.5s 0.2s ease both; }
 
-  /* Deep Dive Section */
-  .safety-section { padding: 5rem 4rem; }
+/* =====================================================
+   QR HERO — full-viewport, first thing user sees
+===================================================== */
+.qr-hero {
+  min-height: 100vh;
+  padding: 7rem 4rem 5rem;
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.qr-hero-bg {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(2,195,154,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(2,195,154,0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 25s linear infinite;
+}
+@keyframes gridMove { 0%{background-position:0 0} 100%{background-position:50px 50px} }
+.qr-hero-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 50% at 15% 55%, rgba(2,128,144,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 85% 25%, rgba(2,195,154,0.1) 0%, transparent 60%);
+}
+.qr-hero-inner {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+}
 
-  .deepdive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 4rem; }
+/* Breadcrumb */
+.breadcrumb {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; color: rgba(255,255,255,0.35);
+  margin-bottom: 1.8rem; animation: fadeUp 0.5s ease both;
+}
+.breadcrumb a { color: var(--mint); text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb span { color: rgba(255,255,255,0.15); }
 
-  .info-block { margin-bottom: 2.5rem; }
-  .info-block h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-  .info-block h3 .tag { font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(2, 195, 154, 0.15); color: var(--mint); padding: 0.2rem 0.6rem; border-radius: 100px; }
-  .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-  .info-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1rem; }
-  .info-item-label { font-size: 0.7rem; color: var(--mint); font-weight: 600; margin-bottom: 0.4rem; }
-  .info-item-val { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.hero-top {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.2rem; animation: fadeUp 0.5s ease both;
+}
+.core-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: linear-gradient(135deg, rgba(2,195,154,0.2), rgba(2,128,144,0.12));
+  border: 1px solid rgba(2,195,154,0.4);
+  border-radius: 100px; padding: 0.4rem 1.1rem;
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--mint); letter-spacing: 1px; text-transform: uppercase;
+}
+.core-badge::before {
+  content: ''; width: 7px; height: 7px;
+  background: var(--mint); border-radius: 50%;
+  box-shadow: 0 0 8px var(--mint);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.75)} }
 
-  /* Case Study Card */
-  .case-card { background: var(--card-bg); border: 1px solid rgba(2, 195, 154, 0.15); border-radius: 20px; padding: 2rem; }
-  .case-badge { display: inline-block; background: rgba(2, 195, 154, 0.1); color: var(--mint); font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 1rem; border: 1px solid rgba(2,195,154,0.2); }
-  .case-card p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+.qr-hero-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.05; letter-spacing: -1px; margin-bottom: 0.8rem;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.qr-hero-heading em { font-style: italic; color: var(--mint); }
 
-  .steps { display: flex; flex-direction: column; gap: 0.75rem; }
-  .step { display: flex; align-items: flex-start; gap: 1rem; }
-  .step-num { min-width: 28px; height: 28px; background: linear-gradient(135deg, var(--teal), var(--mint)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--dark); flex-shrink: 0; }
-  .step-content h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
-  .step-content p { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.qr-hero-sub {
+  color: rgba(255,255,255,0.5); font-size: 1rem; line-height: 1.7;
+  max-width: 580px; margin-bottom: 2.5rem;
+  animation: fadeUp 0.5s 0.2s ease both;
+}
 
-  /* Medicine example section */
-  .divider { height: 1px; background: rgba(255,255,255,0.07); margin: 3rem 0; }
+/* =====================================================
+   SCANNER WIDGET
+===================================================== */
+.scanner-widget {
+  display: grid; grid-template-columns: 1fr 1.05fr;
+  gap: 1.5rem; animation: fadeUp 0.6s 0.3s ease both;
+}
 
-  .example-section h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; }
+/* Left panel */
+.input-panel {
+  background: rgba(15,42,61,0.85);
+  border: 1.5px solid rgba(2,195,154,0.18);
+  border-radius: 24px; overflow: hidden;
+  display: flex; flex-direction: column; min-height: 420px;
+}
 
-  .example-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+/* Tabs */
+.scan-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.scan-tab {
+  padding: 1rem; background: transparent; border: none;
+  cursor: pointer; color: rgba(255,255,255,0.4);
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  transition: all 0.2s; border-bottom: 2px solid transparent;
+}
+.scan-tab:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.03); }
+.scan-tab.active { color: var(--mint); border-bottom-color: var(--mint); background: rgba(2,195,154,0.05); }
 
-  .example-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 1.5rem;
-    transition: border-color 0.3s;
-  }
-  .example-card:hover { border-color: rgba(2,195,154,0.3); }
-  .example-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--mint); margin-bottom: 0.8rem; }
-  .example-card p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
-  .example-icon { font-size: 1.4rem; margin-bottom: 0.8rem; display: block; }
+.tab-content { display: none; flex: 1; flex-direction: column; }
+.tab-content.active { display: flex; }
 
-  .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
-  .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-  .page-nav a:hover { color: var(--mint); }
+/* Camera tab */
+.camera-content {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; padding: 1.2rem; gap: 1rem;
+}
+#qr-reader { width: 100% !important; border-radius: 14px; overflow: hidden; }
 
-  .module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2, 195, 154, 0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
-  .module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
-  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
-  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+/* Override html5-qrcode library styles */
+#qr-reader__dashboard { padding: 8px 0 0 0 !important; }
+#qr-reader__dashboard_section_csr span,
+#qr-reader__dashboard_section_fsr span,
+#qr-reader__status_span {
+  color: rgba(255,255,255,0.6) !important;
+  font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.8rem !important;
+}
+#qr-reader__camera_selection {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  color: var(--white) !important; border-radius: 8px !important;
+  padding: 0.35rem 0.7rem !important; font-family: 'DM Sans', sans-serif !important;
+  margin: 4px 0 !important;
+}
+#qr-reader__dashboard_section_csr button,
+#qr-reader__dashboard_section_fsr button,
+#qr-reader__camera_permission_button {
+  background: var(--mint) !important; color: var(--dark) !important;
+  border: none !important; padding: 0.5rem 1.2rem !important;
+  border-radius: 100px !important; font-weight: 600 !important;
+  cursor: pointer !important; font-family: 'DM Sans', sans-serif !important;
+  font-size: 0.82rem !important;
+}
+#qr-reader__scan_region { border-radius: 12px !important; overflow: hidden !important; }
+#qr-reader__scan_region video { border-radius: 12px !important; }
+#qr-reader img[alt="Info icon"] { display: none !important; }
 
-  @media (max-width: 1100px) {
-    .deepdive-grid { grid-template-columns: 1fr; gap: 2rem; }
-    .example-grid { grid-template-columns: 1fr 1fr; }
-    .safety-section { padding: 4rem 2rem; }
-    .page-hero { padding: 8rem 2rem 3rem; }
-    .page-nav { padding: 2rem; }
-    .module-bar { display: none; }
-  }
-  @media (max-width: 640px) {
-    .info-row { grid-template-columns: 1fr; }
-    .example-grid { grid-template-columns: 1fr; }
-  }
+/* Resume scan button (shown after successful camera scan) */
+#btn-resume-camera {
+  display: none;
+  background: rgba(2,195,154,0.1); border: 1px solid rgba(2,195,154,0.3);
+  color: var(--mint); padding: 0.5rem 1.4rem; border-radius: 100px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+#btn-resume-camera:hover { background: rgba(2,195,154,0.2); }
+
+.camera-notice {
+  display: flex; align-items: flex-start; gap: 0.7rem;
+  background: rgba(2,195,154,0.06); border: 1px solid rgba(2,195,154,0.15);
+  border-radius: 10px; padding: 0.75rem 1rem;
+  font-size: 0.76rem; color: rgba(255,255,255,0.4); line-height: 1.5;
+}
+.camera-notice-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* File tab */
+.file-content {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 2rem;
+}
+.drop-zone {
+  width: 100%; border: 2px dashed rgba(2,195,154,0.25); border-radius: 18px;
+  padding: 2.2rem 1.5rem; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.7rem; text-align: center;
+  cursor: pointer; transition: border-color 0.3s, background 0.3s; position: relative;
+}
+.drop-zone:hover, .drop-zone.drag-over { border-color: var(--mint); background: rgba(2,195,154,0.05); }
+.drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.drop-icon {
+  width: 60px; height: 60px; background: rgba(2,195,154,0.1);
+  border: 1px solid rgba(2,195,154,0.2); border-radius: 16px;
+  display: flex; align-items: center; justify-content: center; font-size: 1.7rem;
+  transition: transform 0.3s;
+}
+.drop-zone:hover .drop-icon { transform: scale(1.08); }
+.drop-zone h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+.drop-zone p { font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+.drop-hint { font-size: 0.7rem !important; color: rgba(255,255,255,0.2) !important; }
+
+.file-preview-state {
+  display: none; flex-direction: column; align-items: center;
+  gap: 1rem; width: 100%; padding: 1rem;
+}
+.file-preview-state img {
+  max-width: 200px; max-height: 200px; object-fit: contain;
+  border: 1px solid rgba(2,195,154,0.2); border-radius: 14px;
+  background: rgba(255,255,255,0.03); padding: 0.5rem;
+}
+.file-name-tag {
+  font-size: 0.78rem; color: rgba(255,255,255,0.3);
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-rescan {
+  background: transparent; border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5); padding: 0.5rem 1.2rem; border-radius: 100px;
+  font-size: 0.8rem; font-weight: 500; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+}
+.btn-rescan:hover { border-color: var(--mint); color: var(--mint); }
+
+/* =====================================================
+   RESULT PANEL
+===================================================== */
+.result-panel {
+  background: rgba(15,42,61,0.85); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 24px; padding: 2.5rem 2rem; min-height: 420px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; transition: border-color 0.4s;
+}
+.result-panel.verified { border-color: rgba(76,175,80,0.3); }
+.result-panel::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--mint));
+  transform: scaleX(0); transition: transform 0.5s ease; transform-origin: left;
+}
+.result-panel.verified::before { transform: scaleX(1); }
+
+.r-state { display: none; flex-direction: column; align-items: center; width: 100%; }
+.r-state.show { display: flex; }
+
+#r-idle { text-align: center; gap: 1rem; }
+.idle-box {
+  width: 80px; height: 80px; border: 2px dashed rgba(255,255,255,0.08); border-radius: 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; color: rgba(255,255,255,0.12);
+}
+#r-idle p { font-size: 0.85rem; color: rgba(255,255,255,0.22); max-width: 200px; line-height: 1.6; text-align: center; }
+
+#r-loading { gap: 1.2rem; text-align: center; }
+.spin-ring {
+  width: 54px; height: 54px; border: 3px solid rgba(2,195,154,0.15);
+  border-top-color: var(--mint); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#r-loading p { font-size: 0.88rem; color: rgba(255,255,255,0.4); }
+
+#r-success { align-items: flex-start; gap: 0; width: 100%; }
+.success-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem; flex-wrap: wrap; width: 100%;
+}
+.verified-pill {
+  display: flex; align-items: center; gap: 0.35rem;
+  background: rgba(76,175,80,0.12); border: 1px solid rgba(76,175,80,0.3);
+  color: #81c784; font-size: 0.7rem; font-weight: 700;
+  padding: 0.28rem 0.75rem; border-radius: 100px; text-transform: uppercase;
+}
+.verified-pill::before { content: '✓'; font-weight: 900; }
+.med-name-display { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--white); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; width: 100%; }
+.d-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px; padding: 1rem 1.1rem; transition: border-color 0.2s;
+}
+.d-card:hover { border-color: rgba(2,195,154,0.2); }
+.d-label { font-size: 0.63rem; font-weight: 700; color: var(--mint); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.45rem; }
+.d-value { font-size: 0.95rem; color: rgba(255,255,255,0.9); font-weight: 500; line-height: 1.3; }
+.expiry-warn .d-value { color: #ffb74d; }
+.expiry-dead .d-value { color: #ef9a9a; }
+.expiry-ok   .d-value { color: #81c784; }
+
+.raw-data-box { margin-top: 1rem; width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1rem; }
+.raw-data-label { font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+.raw-data-text  { font-size: 0.82rem; color: rgba(255,255,255,0.6); word-break: break-all; line-height: 1.5; }
+
+#r-error { gap: 1rem; text-align: center; }
+.err-box { width: 64px; height: 64px; background: rgba(244,67,54,0.1); border: 1px solid rgba(244,67,54,0.2); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+#r-error h4 { font-size: 1rem; color: #ef9a9a; }
+#r-error p  { font-size: 0.82rem; color: rgba(255,255,255,0.35); max-width: 230px; line-height: 1.6; text-align: center; }
+.btn-retry { background: rgba(244,67,54,0.1); border: 1px solid rgba(244,67,54,0.25); color: #ef9a9a; padding: 0.5rem 1.2rem; border-radius: 100px; font-size: 0.8rem; font-weight: 500; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.btn-retry:hover { background: rgba(244,67,54,0.18); }
+
+.tip-bar {
+  display: flex; align-items: flex-start; gap: 0.6rem; margin-top: 1.2rem;
+  padding: 0.8rem 1.2rem; background: rgba(2,195,154,0.05);
+  border: 1px solid rgba(2,195,154,0.12); border-radius: 12px;
+  font-size: 0.78rem; color: rgba(255,255,255,0.35); line-height: 1.5;
+  animation: fadeUp 0.6s 0.5s ease both;
+}
+.tip-bar strong { color: var(--mint); }
+
+/* =====================================================
+   REST OF PAGE
+===================================================== */
+.section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(2,195,154,0.2), transparent); margin: 0 4rem; }
+.safety-section { padding: 5rem 4rem; }
+.deepdive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 4rem; }
+.info-block { margin-bottom: 2.5rem; }
+.info-block h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.info-block h3 .tag { font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(2,195,154,0.15); color: var(--mint); padding: 0.2rem 0.6rem; border-radius: 100px; }
+.info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.info-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1rem; }
+.info-item-label { font-size: 0.7rem; color: var(--mint); font-weight: 600; margin-bottom: 0.4rem; }
+.info-item-val   { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.case-card { background: var(--card-bg); border: 1px solid rgba(2,195,154,0.15); border-radius: 20px; padding: 2rem; }
+.case-badge { display: inline-block; background: rgba(2,195,154,0.1); color: var(--mint); font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 1rem; border: 1px solid rgba(2,195,154,0.2); }
+.case-card > p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+.steps { display: flex; flex-direction: column; gap: 0.75rem; }
+.step { display: flex; align-items: flex-start; gap: 1rem; }
+.step-num { min-width: 28px; height: 28px; background: linear-gradient(135deg, var(--teal), var(--mint)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--dark); flex-shrink: 0; }
+.step-content h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+.step-content p  { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.divider { height: 1px; background: rgba(255,255,255,0.07); margin: 3rem 0; }
+.example-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+.example-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.5rem; transition: border-color 0.3s; }
+.example-card:hover { border-color: rgba(2,195,154,0.3); }
+.example-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--mint); margin-bottom: 0.8rem; }
+.example-card p  { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+.example-icon { font-size: 1.4rem; margin-bottom: 0.8rem; display: block; }
+.page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
+.page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+.page-nav a:hover { color: var(--mint); }
+.module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10,22,40,0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2,195,154,0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
+.module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
+.module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+.module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+@media (max-width: 1100px) {
+  .scanner-widget { grid-template-columns: 1fr; }
+  .deepdive-grid  { grid-template-columns: 1fr; gap: 2rem; }
+  .example-grid   { grid-template-columns: 1fr 1fr; }
+  .qr-hero        { padding: 6rem 2rem 4rem; }
+  .safety-section { padding: 4rem 2rem; }
+  .section-divider { margin: 0 2rem; }
+  .page-nav       { padding: 2rem; }
+  .module-bar     { display: none; }
+}
+@media (max-width: 640px) {
+  .detail-grid  { grid-template-columns: 1fr; }
+  .info-row     { grid-template-columns: 1fr; }
+  .example-grid { grid-template-columns: 1fr; }
+  .scan-tab .tab-label { display: none; }
+}
 </style>
 </head>
 <body>
@@ -97,7 +361,7 @@
     <li><a href="accessibility.html">Accessibility</a></li>
     <li><a href="sdg.html">Mission</a></li>
     <li><a href="tech.html">Tech Stack</a></li>
-    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+    <li><a href="tech.html" class="nav-cta">Login</a></li>
   </ul>
 </nav>
 
@@ -111,22 +375,162 @@
   <a href="tech.html">⚙️ Tech</a>
 </div>
 
-<section class="page-hero">
-  <div class="page-hero-content">
+
+<!-- ═══════════════════════════════════════
+     QR SCANNER HERO — CORE FEATURE, TOP
+═══════════════════════════════════════ -->
+<section class="qr-hero">
+  <div class="qr-hero-bg"></div>
+  <div class="qr-hero-glow"></div>
+  <div class="qr-hero-inner">
+
     <div class="breadcrumb">
-      <a href="../index.html">Home</a>
-      <span>›</span>
-      <span>Safety & Verification</span>
+      <a href="../index.html">Home</a><span>›</span><span>Safety &amp; Verification</span>
     </div>
-    <div class="section-label" style="animation: fadeUp 0.5s ease both;">Pillars of Safety</div>
-    <h2 class="page-title">Medicine Awareness<br>& <em>Verification</em></h2>
-    <p class="page-sub">Deep-dive into how PharmaTrack ensures every medicine you take is authentic, safe, and properly understood.</p>
+
+    <div class="hero-top">
+      <span class="core-badge">Core Feature</span>
+      <span class="section-label" style="margin:0;">QR Scanner</span>
+    </div>
+
+    <h1 class="qr-hero-heading">Scan Medicine<br><em>QR Code</em></h1>
+    <p class="qr-hero-sub">
+      Use your <strong style="color:rgba(255,255,255,0.8)">camera</strong> for live scanning, or
+      <strong style="color:rgba(255,255,255,0.8)">upload an image</strong> of the QR code on medicine
+      packaging to instantly verify authenticity — shows manufacturer, medicine name, manufacturing
+      &amp; expiry dates.
+    </p>
+
+    <!-- THE WIDGET -->
+    <div class="scanner-widget">
+
+      <!-- LEFT: input panel -->
+      <div class="input-panel">
+        <div class="scan-tabs">
+          <button class="scan-tab active" id="tab-camera" onclick="switchTab('camera')">
+            <span>📷</span><span class="tab-label">Live Camera</span>
+          </button>
+          <button class="scan-tab" id="tab-file" onclick="switchTab('file')">
+            <span>🖼️</span><span class="tab-label">Upload Image</span>
+          </button>
+        </div>
+
+        <!-- Camera content -->
+        <div class="tab-content active" id="content-camera">
+          <div class="camera-content">
+            <div id="qr-reader"></div>
+            <button id="btn-resume-camera" onclick="resumeCamera()">↺ Scan Another</button>
+            <div class="camera-notice">
+              <span class="camera-notice-icon">🔒</span>
+              <span>Camera access required. Works on <strong>HTTPS</strong> or <strong>localhost</strong>. Your browser will prompt for permission.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- File content -->
+        <div class="tab-content" id="content-file">
+          <div class="file-content">
+            <div class="drop-zone" id="dropZone">
+              <input type="file" id="qr-file-input" accept="image/*">
+              <div class="drop-icon">📁</div>
+              <h3>Upload QR Code Image</h3>
+              <p>Drag &amp; drop, or click to browse</p>
+              <p class="drop-hint">JPG &nbsp;·&nbsp; PNG &nbsp;·&nbsp; WEBP</p>
+              <button class="btn-primary"
+                style="margin-top:0.5rem;font-size:0.85rem;padding:0.65rem 1.6rem;position:relative;z-index:2;"
+                onclick="event.stopPropagation();document.getElementById('qr-file-input').click()">
+                Choose File
+              </button>
+            </div>
+            <div class="file-preview-state" id="filePreview">
+              <img id="preview-img" src="" alt="QR Preview">
+              <div class="file-name-tag" id="file-name-tag"></div>
+              <button class="btn-rescan" id="btn-rescan">↺ Scan Another Image</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: result panel -->
+      <div class="result-panel" id="resultPanel">
+
+        <div class="r-state show" id="r-idle">
+          <div class="idle-box">🔍</div>
+          <p>Start camera or upload an image to see medicine details here</p>
+        </div>
+
+        <div class="r-state" id="r-loading">
+          <div class="spin-ring"></div>
+          <p>Scanning QR code…</p>
+        </div>
+
+        <div class="r-state" id="r-success">
+          <div class="success-header">
+            <span class="verified-pill">Verified</span>
+            <span class="med-name-display" id="r-med-name">—</span>
+          </div>
+          <div class="detail-grid">
+            <div class="d-card">
+              <div class="d-label">Medicine Name</div>
+              <div class="d-value" id="r-medicine">—</div>
+            </div>
+            <div class="d-card">
+              <div class="d-label">Manufacturer</div>
+              <div class="d-value" id="r-manufacturer">—</div>
+            </div>
+            <div class="d-card">
+              <div class="d-label">Date of Manufacturing</div>
+              <div class="d-value" id="r-mfg">—</div>
+            </div>
+            <div class="d-card" id="r-expiry-card">
+              <div class="d-label">Date of Expiry</div>
+              <div class="d-value" id="r-expiry">—</div>
+            </div>
+          </div>
+          <div class="raw-data-box" id="r-raw-box" style="display:none;">
+            <div class="raw-data-label">Raw QR Data (unstructured)</div>
+            <div class="raw-data-text" id="r-raw-text"></div>
+          </div>
+        </div>
+
+        <div class="r-state" id="r-error">
+          <div class="err-box">⚠️</div>
+          <h4>Scan Failed</h4>
+          <p id="r-error-msg">No QR code detected. Try a clearer, well-lit image.</p>
+          <button class="btn-retry" onclick="resetToIdle()">Try Again</button>
+        </div>
+
+      </div><!-- /result-panel -->
+    </div><!-- /scanner-widget -->
+
+    <div class="tip-bar" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <span style="display:flex; align-items:flex-start; gap:0.7rem;">
+        <span>💡</span>
+        <span>
+          <strong>Don't have a medicine QR code?</strong> Use the PharmaTrack QR Generator — fill in 4 fields, download the QR, then scan it right here to verify all details.
+        </span>
+      </span>
+      <a href="../qr-generator.html"
+         style="display:inline-flex; align-items:center; gap:0.5rem; background:var(--mint); color:var(--dark);
+                padding:0.6rem 1.3rem; border-radius:100px; font-size:0.82rem; font-weight:700;
+                text-decoration:none; white-space:nowrap; flex-shrink:0;
+                transition: box-shadow 0.2s, transform 0.2s;"
+         onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(2,195,154,0.4)'"
+         onmouseout="this.style.transform=''; this.style.boxShadow=''">
+        ⚡ Open QR Generator →
+      </a>
+    </div>
+
   </div>
 </section>
 
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════
+     DEEP DIVE
+═══════════════════════════════════════ -->
 <section class="safety-section">
   <div class="deepdive-grid">
-    <!-- Left Column -->
     <div>
       <div class="info-block reveal">
         <h3>Alternative Medicine <span class="tag">Suggestion</span></h3>
@@ -142,20 +546,19 @@
         </div>
         <div class="info-item">
           <div class="info-item-label">Benefit</div>
-          <div class="info-item-val">Ensures continuity of treatment and reduces multiple pharmacy visits, saving time and reducing health risks from treatment delays.</div>
+          <div class="info-item-val">Ensures continuity of treatment and reduces multiple pharmacy visits, saving time and reducing health risks.</div>
         </div>
       </div>
-
       <div class="info-block reveal">
         <h3>QR Verification <span class="tag">Authentication</span></h3>
         <div class="info-row">
           <div class="info-item">
             <div class="info-item-label">Mechanism</div>
-            <div class="info-item-val">Scan unique QR code on medicine packaging via the app — instant cloud verification against the authenticated database.</div>
+            <div class="info-item-val">Scan unique QR code on medicine packaging — instant verification against the authenticated manufacturer database.</div>
           </div>
           <div class="info-item">
             <div class="info-item-label">Info Displayed</div>
-            <div class="info-item-val">Manufacturer details, batch number, manufacturing date, and expiry date — all cryptographically verified.</div>
+            <div class="info-item-val">Manufacturer details, medicine name, manufacturing date, and expiry date — all verified.</div>
           </div>
         </div>
         <div class="info-item">
@@ -164,8 +567,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Right Column: Case Study -->
     <div class="reveal">
       <div class="section-label" style="margin-bottom:1.5rem;">Case Study</div>
       <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);">The Critical Need<br>for QR Verification</h2>
@@ -173,27 +574,9 @@
         <span class="case-badge">Real-World Impact · 2023</span>
         <p>A reported incident in 2023 highlighted severe consequences of counterfeit drugs — a patient experienced delayed recovery and adverse effects after consuming a fake antibiotic that passed visual inspection but failed chemical verification.</p>
         <div class="steps">
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-content">
-              <h4>Detection</h4>
-              <p>PharmaTrack detects invalid or duplicated QR codes before the user even opens the packaging — immediate red flag alert.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-content">
-              <h4>Prevention</h4>
-              <p>Real-time alert system warns users to avoid potentially harmful counterfeit medications and guides them to a legitimate source.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-content">
-              <h4>Trust Restoration</h4>
-              <p>Reliable authentication mechanism significantly improves medicine safety and rebuilds public trust in pharmaceuticals.</p>
-            </div>
-          </div>
+          <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Detection</h4><p>PharmaTrack detects invalid or duplicated QR codes before the user even opens the packaging.</p></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Prevention</h4><p>Real-time alert warns users to avoid potentially harmful counterfeit medications immediately.</p></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-content"><h4>Trust Restoration</h4><p>Reliable authentication significantly improves medicine safety and rebuilds public trust.</p></div></div>
         </div>
       </div>
     </div>
@@ -201,41 +584,290 @@
 
   <div class="divider"></div>
 
-  <!-- Medicine Examples -->
   <div class="example-section reveal">
     <div class="section-label">Drug Safety Examples</div>
-    <h3>Real Precautions Powered by PharmaTrack</h3>
+    <h3 style="font-family:'DM Serif Display',serif;font-size:1.5rem;margin-bottom:1.5rem;">Real Precautions Powered by PharmaTrack</h3>
     <div class="example-grid">
-      <div class="example-card">
-        <span class="example-icon">💊</span>
-        <h4>Ibuprofen</h4>
-        <p>⚠️ Avoid on empty stomach. Caution for kidney conditions. Do not combine with blood thinners. Take with food or milk to reduce gastric irritation.</p>
-      </div>
-      <div class="example-card">
-        <span class="example-icon">🩸</span>
-        <h4>Iron + Calcium</h4>
-        <p>⚠️ Do not take together — calcium blocks iron absorption. Recommended spacing: at least 2 hours apart. Take iron with Vitamin C for better absorption.</p>
-      </div>
-      <div class="example-card">
-        <span class="example-icon">🧠</span>
-        <h4>Metformin</h4>
-        <p>⚠️ Avoid alcohol while taking. Monitor for lactic acidosis symptoms. Kidney function must be checked regularly during use of this medication.</p>
-      </div>
+      <div class="example-card"><span class="example-icon">💊</span><h4>Ibuprofen</h4><p>⚠️ Avoid on empty stomach. Caution for kidney conditions. Do not combine with blood thinners. Take with food or milk.</p></div>
+      <div class="example-card"><span class="example-icon">🩸</span><h4>Iron + Calcium</h4><p>⚠️ Do not take together — calcium blocks iron absorption. Recommended spacing: at least 2 hours apart.</p></div>
+      <div class="example-card"><span class="example-icon">🧠</span><h4>Metformin</h4><p>⚠️ Avoid alcohol while taking. Monitor for lactic acidosis symptoms. Kidney function should be checked regularly.</p></div>
     </div>
   </div>
 </section>
 
 <div class="page-nav">
   <a href="features.html">← Core Features</a>
-  <a href="accessibility.html">Accessibility & Support →</a>
+  <a href="accessibility.html">Accessibility &amp; Support →</a>
 </div>
 
 <footer>
   <a href="../index.html" class="logo">Pharm<span>Track</span></a>
-  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p>A Smart, Accessible Healthcare Awareness &amp; Assistance System</p>
   <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
 </footer>
 
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ -->
 <script src="../js/main.js"></script>
+
+<!-- html5-qrcode v2.3.8 — https://github.com/mebjas/html5-qrcode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+/* ─────────────────────────────────────────────────
+   GLOBALS
+───────────────────────────────────────────────── */
+let cameraScanner  = null;   // Html5Qrcode instance for camera
+let cameraRunning  = false;
+let activeTab      = 'camera';
+
+const resultPanel  = document.getElementById('resultPanel');
+
+/* ─────────────────────────────────────────────────
+   RESULT PANEL STATE MACHINE
+───────────────────────────────────────────────── */
+function showRState(id) {
+  document.querySelectorAll('.r-state').forEach(el => el.classList.remove('show'));
+  document.getElementById(id).classList.add('show');
+  resultPanel.classList.toggle('verified', id === 'r-success');
+}
+
+function resetToIdle() {
+  showRState('r-idle');
+}
+
+/* ─────────────────────────────────────────────────
+   TAB SWITCHER
+───────────────────────────────────────────────── */
+function switchTab(tab) {
+  activeTab = tab;
+
+  document.querySelectorAll('.scan-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('content-' + tab).classList.add('active');
+
+  resetToIdle();
+
+  if (tab === 'camera') {
+    startCamera();
+  } else {
+    stopCamera();
+    resetFileTab();
+  }
+}
+
+/* ─────────────────────────────────────────────────
+   CAMERA — html5-qrcode
+   Docs: https://github.com/mebjas/html5-qrcode
+───────────────────────────────────────────────── */
+function startCamera() {
+  if (cameraRunning) return;
+
+  // html5-qrcode needs the element to exist and be visible
+  cameraScanner = new Html5Qrcode("qr-reader");
+
+  const config = {
+    fps: 10,
+    qrbox: { width: 220, height: 220 },
+    aspectRatio: 1.333,
+    // Only scan QR codes for performance
+    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ]
+  };
+
+  cameraScanner.start(
+    { facingMode: "environment" },  // Use rear camera on phones
+    config,
+    (decodedText) => {
+      // ✅ SUCCESS — QR code decoded
+      parseAndDisplay(decodedText);
+      // Pause camera after first hit so result stays visible
+      cameraScanner.pause(true);
+      document.getElementById('btn-resume-camera').style.display = 'inline-block';
+    },
+    () => {
+      // ❌ Per-frame failure — fires constantly when no QR found, just ignore
+    }
+  )
+  .then(() => { cameraRunning = true; })
+  .catch(err => {
+    document.getElementById('r-error-msg').textContent =
+      'Camera unavailable or permission denied. Please switch to the Upload Image tab.';
+    showRState('r-error');
+  });
+}
+
+function stopCamera() {
+  document.getElementById('btn-resume-camera').style.display = 'none';
+  if (cameraScanner && cameraRunning) {
+    cameraScanner.stop()
+      .then(() => { cameraScanner.clear(); cameraRunning = false; cameraScanner = null; })
+      .catch(() => {});
+  }
+}
+
+function resumeCamera() {
+  if (cameraScanner && cameraRunning) {
+    cameraScanner.resume();
+    document.getElementById('btn-resume-camera').style.display = 'none';
+    resetToIdle();
+  }
+}
+
+// Auto-start camera on page load
+window.addEventListener('load', () => setTimeout(startCamera, 300));
+
+/* ─────────────────────────────────────────────────
+   FILE UPLOAD — html5-qrcode scanFile API
+   https://github.com/mebjas/html5-qrcode#file-based-scanning
+───────────────────────────────────────────────── */
+const fileInput   = document.getElementById('qr-file-input');
+const dropZone    = document.getElementById('dropZone');
+const filePreview = document.getElementById('filePreview');
+const previewImg  = document.getElementById('preview-img');
+const fileNameTag = document.getElementById('file-name-tag');
+const btnRescan   = document.getElementById('btn-rescan');
+
+// Open file picker on zone click (but not on the button, which has its own handler)
+dropZone.addEventListener('click', e => {
+  if (!e.target.closest('button')) fileInput.click();
+});
+
+// File selected via picker
+fileInput.addEventListener('change', e => {
+  if (e.target.files && e.target.files[0]) processImageFile(e.target.files[0]);
+});
+
+// Drag & drop
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) processImageFile(e.dataTransfer.files[0]);
+});
+
+btnRescan.addEventListener('click', resetFileTab);
+
+function resetFileTab() {
+  fileInput.value = '';
+  filePreview.style.display = 'none';
+  dropZone.style.display    = 'flex';
+  resetToIdle();
+}
+
+function processImageFile(file) {
+  // Preview the image
+  const reader = new FileReader();
+  reader.onload = ev => {
+    previewImg.src          = ev.target.result;
+    fileNameTag.textContent = file.name;
+    dropZone.style.display    = 'none';
+    filePreview.style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+
+  showRState('r-loading');
+
+  /*
+   * Use Html5Qrcode.scanFile() — the official file-based scan API.
+   * We mount it on a hidden off-screen element so it doesn't interfere
+   * with the camera #qr-reader element.
+   */
+  const TEMP_ID = '__pharma_file_scanner__';
+  let host = document.getElementById(TEMP_ID);
+  if (!host) {
+    host = document.createElement('div');
+    host.id = TEMP_ID;
+    host.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;';
+    document.body.appendChild(host);
+  }
+
+  const fileScanner = new Html5Qrcode(TEMP_ID);
+
+  fileScanner.scanFile(file, /* showImage= */ false)
+    .then(decodedText => {
+      fileScanner.clear();
+      parseAndDisplay(decodedText);
+    })
+    .catch(() => {
+      fileScanner.clear();
+      document.getElementById('r-error-msg').textContent =
+        'No QR code detected in this image. Please try a clearer, well-lit photo with the full QR code visible.';
+      showRState('r-error');
+    });
+}
+
+/* ─────────────────────────────────────────────────
+   PARSE & DISPLAY
+   Supports 3 QR data formats:
+     1. JSON  — {"medicine":"...","manufacturer":"...","mfg":"...","exp":"..."}
+     2. Pipe  — Name|Manufacturer|MfgDate|ExpDate
+     3. Raw text (fallback)
+───────────────────────────────────────────────── */
+function parseAndDisplay(rawText) {
+  let d = { medicine: null, manufacturer: null, mfg: null, exp: null };
+  let structured = false;
+
+  try {
+    // Format 1: JSON
+    const j = JSON.parse(rawText);
+    d.medicine     = j.medicine     || j.name         || j.drug        || null;
+    d.manufacturer = j.manufacturer || j.company      || j.mfr         || null;
+    d.mfg          = j.mfg          || j.manufactured || j.dom         || j.mfgDate    || null;
+    d.exp          = j.exp          || j.expiry       || j.doe         || j.expDate    || j.expiryDate || null;
+    structured = true;
+  } catch {
+    if (rawText.includes('|')) {
+      // Format 2: Pipe-separated
+      const p = rawText.split('|');
+      d.medicine     = p[0]?.trim() || null;
+      d.manufacturer = p[1]?.trim() || null;
+      d.mfg          = p[2]?.trim() || null;
+      d.exp          = p[3]?.trim() || null;
+      structured = p.length >= 2;
+    }
+  }
+
+  // Populate UI
+  const fill = (id, val) => { document.getElementById(id).textContent = val || 'Not specified'; };
+
+  fill('r-med-name',     d.medicine || rawText.substring(0, 50));
+  fill('r-medicine',     d.medicine);
+  fill('r-manufacturer', d.manufacturer);
+  fill('r-mfg',          d.mfg);
+  fill('r-expiry',       d.exp);
+
+  // Show raw box if unstructured
+  const rawBox  = document.getElementById('r-raw-box');
+  const rawText2 = document.getElementById('r-raw-text');
+  if (!structured) {
+    rawText2.textContent = rawText;
+    rawBox.style.display = 'block';
+  } else {
+    rawBox.style.display = 'none';
+  }
+
+  // Expiry colour coding
+  const expiryCard = document.getElementById('r-expiry-card');
+  expiryCard.className = 'd-card';
+  if (d.exp) {
+    try {
+      const expDate = new Date(d.exp);
+      if (!isNaN(expDate)) {
+        const monthsLeft = (expDate - Date.now()) / (1000 * 60 * 60 * 24 * 30.44);
+        if      (monthsLeft < 0)  expiryCard.classList.add('expiry-dead'); // expired — red
+        else if (monthsLeft < 3)  expiryCard.classList.add('expiry-warn'); // < 3 months — orange
+        else                      expiryCard.classList.add('expiry-ok');   // good — green
+      }
+    } catch {}
+  }
+
+  showRState('r-success');
+}
+</script>
 </body>
 </html>

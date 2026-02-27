@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Medicine QR Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #028090;
+    --mint: #02C39A;
+    --dark: #0A1628;
+    --navy: #0D2240;
+    --white: #FFFFFF;
+    --card-bg: #0F2A3D;
+    --muted: rgba(255,255,255,0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--dark);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- ANIMATED BG ---- */
+  .page-bg {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(2,195,154,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(2,195,154,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: gridDrift 30s linear infinite;
+  }
+  @keyframes gridDrift {
+    from { background-position: 0 0; }
+    to   { background-position: 48px 48px; }
+  }
+  .page-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 10% 20%, rgba(2,128,144,0.14) 0%, transparent 70%),
+      radial-gradient(ellipse 45% 45% at 90% 80%, rgba(2,195,154,0.08) 0%, transparent 60%);
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.2rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,22,40,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(2,195,154,0.1);
+  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--white); text-decoration: none; letter-spacing: -0.5px; }
+  .logo span { color: var(--mint); }
+  .nav-back {
+    display: flex; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.5); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-back:hover { color: var(--mint); }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative; z-index: 1;
+    padding: 8rem 4rem 3rem;
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(2,195,154,0.12);
+    border: 1px solid rgba(2,195,154,0.3);
+    border-radius: 100px;
+    padding: 0.4rem 1.1rem;
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--mint); letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 7px; height: 7px;
+    background: var(--mint); border-radius: 50%;
+    box-shadow: 0 0 8px var(--mint);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity:1; } 50% { opacity:0.3; }
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.05; letter-spacing: -1px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .hero h1 em { font-style: italic; color: var(--mint); }
+  .hero p {
+    margin-top: 1rem;
+    color: rgba(255,255,255,0.5);
+    font-size: 1rem; line-height: 1.75;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  /* ---- MAIN LAYOUT ---- */
+  .main {
+    position: relative; z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 4rem 6rem;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  /* ---- FORM CARD ---- */
+  .form-card {
+    background: rgba(15,42,61,0.7);
+    border: 1px solid rgba(2,195,154,0.15);
+    border-radius: 24px;
+    padding: 2.5rem;
+    backdrop-filter: blur(8px);
+    animation: fadeUp 0.6s 0.25s ease both;
+  }
+  .form-card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; margin-bottom: 0.3rem;
+  }
+  .form-card-sub {
+    font-size: 0.83rem; color: rgba(255,255,255,0.4);
+    margin-bottom: 2rem; line-height: 1.6;
+  }
+
+  /* Fields */
+  .field { margin-bottom: 1.4rem; }
+  .field label {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--mint); letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .field label .req { color: #ef9a9a; font-size: 0.9rem; }
+
+  .field input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+  }
+  .field input:focus {
+    border-color: rgba(2,195,154,0.5);
+    background: rgba(2,195,154,0.04);
+  }
+  .field input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .field-hint {
+    font-size: 0.72rem; color: rgba(255,255,255,0.25);
+    margin-top: 0.4rem; line-height: 1.5;
+  }
+
+  /* Two column fields */
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* Preview of JSON */
+  .json-preview {
+    margin-top: 1.5rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: rgba(2,195,154,0.8);
+    line-height: 1.7;
+    word-break: break-all;
+  }
+  .json-preview-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem; font-weight: 700;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Generate Button */
+  .btn-generate {
+    width: 100%; margin-top: 1.8rem;
+    background: linear-gradient(135deg, var(--teal), var(--mint));
+    color: var(--dark); border: none;
+    padding: 1rem; border-radius: 14px;
+    font-size: 1rem; font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    letter-spacing: 0.3px;
+  }
+  .btn-generate:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(2,195,154,0.4);
+  }
+  .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ---- OUTPUT CARD ---- */
+  .output-card {
+    background: rgba(15,42,61,0.7);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+    animation: fadeUp 0.6s 0.35s ease both;
+    position: sticky;
+    top: 6rem;
+  }
+
+  /* Output tabs */
+  .output-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0,0,0,0.2);
+  }
+  .out-tab {
+    flex: 1; padding: 0.9rem 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    font-size: 0.82rem; font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer; border: none; background: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .out-tab.active { color: var(--mint); border-bottom-color: var(--mint); background: rgba(2,195,154,0.05); }
+
+  .out-panel { display: none; padding: 2.5rem; }
+  .out-panel.active { display: block; }
+
+  /* QR display area */
+  .qr-display {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* QR placeholder */
+  .qr-placeholder {
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.02);
+    border: 2px dashed rgba(255,255,255,0.08);
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0.8rem;
+    color: rgba(255,255,255,0.15);
+    font-size: 0.82rem; text-align: center;
+  }
+  .qr-placeholder .ph-icon { font-size: 2.5rem; }
+
+  /* QR canvas wrapper */
+  .qr-wrap {
+    display: none;
+    background: white;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  #qrCanvas { display: block; }
+
+  /* Med name badge under QR */
+  .qr-med-label {
+    display: none;
+    text-align: center;
+  }
+  .qr-med-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem; margin-bottom: 0.2rem;
+  }
+  .qr-med-mfr {
+    font-size: 0.78rem; color: rgba(255,255,255,0.35);
+  }
+
+  /* Action buttons */
+  .qr-actions {
+    display: flex; gap: 0.8rem; width: 100%;
+  }
+  .btn-dl {
+    flex: 1; background: var(--mint); color: var(--dark);
+    border: none; padding: 0.75rem;
+    border-radius: 12px; font-size: 0.85rem; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+  }
+  .btn-dl:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,195,154,0.35); }
+  .btn-dl:disabled { opacity: 0.35; cursor: not-allowed; transform: none; box-shadow: none; }
+
+  .btn-copy {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    padding: 0.75rem 1rem;
+    border-radius: 12px; font-size: 0.85rem; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .btn-copy:hover { border-color: var(--mint); color: var(--mint); background: rgba(2,195,154,0.06); }
+  .btn-copy:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Raw JSON panel */
+  .raw-panel .raw-label {
+    font-size: 0.68rem; font-weight: 700;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .raw-box {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px; padding: 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem; color: rgba(2,195,154,0.85);
+    line-height: 1.8; word-break: break-all;
+    min-height: 80px;
+    white-space: pre-wrap;
+  }
+  .raw-empty { color: rgba(255,255,255,0.15) !important; font-style: italic; font-family: 'DM Sans', sans-serif !important; }
+
+  .btn-copy-raw {
+    margin-top: 1rem; width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.45);
+    padding: 0.65rem;
+    border-radius: 10px; font-size: 0.82rem; font-weight: 600;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-copy-raw:hover { border-color: rgba(2,195,154,0.3); color: var(--mint); }
+
+  /* ---- SAMPLE MEDICINES SECTION ---- */
+  .samples-section {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 4rem 5rem;
+  }
+  .samples-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem; margin-bottom: 0.4rem;
+  }
+  .samples-sub { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
+
+  .samples-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .sample-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px; padding: 1.4rem;
+    cursor: pointer; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .sample-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--mint));
+    transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .sample-card:hover { border-color: rgba(2,195,154,0.3); transform: translateY(-3px); }
+  .sample-card:hover::after { transform: scaleX(1); }
+
+  .sample-icon { font-size: 1.6rem; margin-bottom: 0.8rem; display: block; }
+  .sample-name { font-family: 'DM Serif Display', serif; font-size: 1rem; margin-bottom: 0.3rem; }
+  .sample-mfr  { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 0.8rem; }
+  .sample-dates { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .sample-date-pill {
+    font-size: 0.68rem; font-weight: 600;
+    padding: 0.2rem 0.6rem; border-radius: 100px;
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .use-badge {
+    position: absolute; top: 1rem; right: 1rem;
+    font-size: 0.65rem; font-weight: 700;
+    color: var(--mint); letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .sample-card:hover .use-badge { opacity: 1; }
+
+  /* ---- HOW IT WORKS ---- */
+  .how-section {
+    position: relative; z-index: 1;
+    max-width: 1100px; margin: 0 auto;
+    padding: 0 4rem 6rem;
+  }
+  .how-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .how-sub { font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
+
+  .how-steps {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+    position: relative;
+  }
+  .how-steps::before {
+    content: '';
+    position: absolute; top: 28px; left: 14%; right: 14%;
+    height: 1px; background: linear-gradient(90deg, transparent, rgba(2,195,154,0.3), transparent);
+  }
+  .how-step { text-align: center; padding: 1.5rem 1rem; }
+  .how-num {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, var(--teal), var(--mint));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem; font-weight: 700; color: var(--dark);
+    margin: 0 auto 1.1rem;
+    position: relative; z-index: 1;
+  }
+  .how-step h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .how-step p { font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: rgba(2,195,154,0.15);
+    border: 1px solid rgba(2,195,154,0.35);
+    color: var(--mint);
+    padding: 0.75rem 1.5rem; border-radius: 100px;
+    font-size: 0.85rem; font-weight: 600;
+    z-index: 999; transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 1000px) {
+    .main { grid-template-columns: 1fr; padding: 0 2rem 4rem; }
+    .output-card { position: static; }
+    .samples-section, .how-section { padding: 0 2rem 4rem; }
+    .samples-grid { grid-template-columns: 1fr 1fr; }
+    .how-steps { grid-template-columns: 1fr 1fr; }
+    .how-steps::before { display: none; }
+    nav { padding: 1.2rem 2rem; }
+    .hero { padding: 7rem 2rem 2rem; }
+  }
+  @media (max-width: 600px) {
+    .samples-grid { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-bg"></div>
+<div class="page-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="logo">Pharm<span>Track</span></a>
+  <a href="pages/safety.html" class="nav-back">← Back to Scanner</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">QR Generator Tool</div>
+  <h1>Generate Medicine<br><em>QR Codes</em></h1>
+  <p>Fill in the medicine details below to generate a QR code.<br>Download it and scan it in the PharmaTrack Safety page to verify.</p>
+</div>
+
+<!-- MAIN FORM + OUTPUT -->
+<div class="main">
+
+  <!-- FORM CARD -->
+  <div class="form-card">
+    <div class="form-card-title">Medicine Details</div>
+    <div class="form-card-sub">All 4 fields will be encoded into the QR code and displayed when scanned.</div>
+
+    <div class="field">
+      <label>Medicine Name <span class="req">*</span></label>
+      <input type="text" id="fMedicine" placeholder="e.g. Dolo 650" oninput="updatePreview()">
+      <div class="field-hint">Full brand name of the medicine</div>
+    </div>
+
+    <div class="field">
+      <label>Manufacturer Name <span class="req">*</span></label>
+      <input type="text" id="fManufacturer" placeholder="e.g. Micro Labs Ltd." oninput="updatePreview()">
+      <div class="field-hint">Company that manufactured this medicine</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Date of Manufacturing <span class="req">*</span></label>
+        <input type="month" id="fMfg" oninput="updatePreview()" style="color-scheme: dark;">
+      </div>
+      <div class="field">
+        <label>Date of Expiry <span class="req">*</span></label>
+        <input type="month" id="fExp" oninput="updatePreview()" style="color-scheme: dark;">
+      </div>
+    </div>
+
+    <!-- Live JSON preview -->
+    <div class="json-preview">
+      <div class="json-preview-label">Encoded QR Data (JSON)</div>
+      <div id="jsonPreview" style="color: rgba(255,255,255,0.2); font-style: italic; font-family: 'DM Sans', sans-serif; font-size: 0.78rem;">Fill in the fields above to preview encoded data…</div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate" onclick="generateQR()" disabled>
+      <span>⚡</span> Generate QR Code
+    </button>
+  </div>
+
+  <!-- OUTPUT CARD -->
+  <div class="output-card">
+    <div class="output-tabs">
+      <button class="out-tab active" id="outTabQR"  onclick="switchOutTab('qr')">📱 QR Code</button>
+      <button class="out-tab"        id="outTabRaw" onclick="switchOutTab('raw')">{ } Raw Data</button>
+    </div>
+
+    <!-- QR PANEL -->
+    <div class="out-panel active" id="outPanelQR">
+      <div class="qr-display">
+
+        <div class="qr-placeholder" id="qrPlaceholder">
+          <span class="ph-icon">⬛</span>
+          <span>Your QR code<br>will appear here</span>
+        </div>
+
+        <div class="qr-wrap" id="qrWrap">
+          <canvas id="qrCanvas"></canvas>
+        </div>
+
+        <div class="qr-med-label" id="qrMedLabel">
+          <div class="qr-med-name" id="qrMedName"></div>
+          <div class="qr-med-mfr"  id="qrMedMfr"></div>
+        </div>
+
+        <div class="qr-actions">
+          <button class="btn-dl" id="btnDownload" onclick="downloadQR()" disabled>
+            ⬇ Download PNG
+          </button>
+          <button class="btn-copy" id="btnCopyImg" onclick="copyQRToClipboard()" disabled title="Copy image">
+            📋 Copy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAW JSON PANEL -->
+    <div class="out-panel raw-panel" id="outPanelRaw">
+      <div class="raw-label">Encoded JSON String</div>
+      <div class="raw-box raw-empty" id="rawBox">Generate a QR code first to see the encoded data here.</div>
+      <button class="btn-copy-raw" id="btnCopyRaw" onclick="copyRaw()">📋 Copy JSON String</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- SAMPLE MEDICINES -->
+<div class="samples-section">
+  <div class="section-label" style="font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--mint); margin-bottom:0.8rem;">Quick Fill</div>
+  <div class="samples-title">Sample Medicines</div>
+  <div class="samples-sub">Click any card to auto-fill the form and instantly generate its QR code.</div>
+
+  <div class="samples-grid" id="samplesGrid">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+
+<!-- HOW IT WORKS -->
+<div class="how-section">
+  <div class="section-label" style="font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--mint); margin-bottom:0.8rem;">Workflow</div>
+  <div class="how-title">How to Use This Tool</div>
+  <div class="how-sub">Four simple steps from form to verified scan.</div>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <h4>Fill Details</h4>
+      <p>Enter the medicine name, manufacturer, and both dates in the form.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <h4>Generate QR</h4>
+      <p>Click "Generate QR Code" — a scannable code is created instantly.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <h4>Download / Print</h4>
+      <p>Download the PNG and print it or attach it to your medicine packaging.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-num">4</div>
+      <h4>Scan & Verify</h4>
+      <p>Go to the Safety page, upload the QR image, and see all 4 details appear.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<!-- QRious — lightweight, zero-dep QR canvas library via cdnjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+
+/* =============================================================
+   SAMPLE DATA
+============================================================= */
+const SAMPLES = [
+  {
+    icon: '💊',
+    medicine: 'Dolo 650',
+    manufacturer: 'Micro Labs Ltd.',
+    mfg: '2024-01',
+    exp: '2026-03'
+  },
+  {
+    icon: '🩺',
+    medicine: 'Calpol 650',
+    manufacturer: 'GSK Pharmaceuticals',
+    mfg: '2024-03',
+    exp: '2026-03'
+  },
+  {
+    icon: '🏥',
+    medicine: 'Augmentin 625',
+    manufacturer: 'GlaxoSmithKline',
+    mfg: '2024-05',
+    exp: '2026-05'
+  },
+  {
+    icon: '💉',
+    medicine: 'Metformin 500',
+    manufacturer: 'Sun Pharmaceuticals',
+    mfg: '2023-11',
+    exp: '2025-11'
+  },
+  {
+    icon: '🫀',
+    medicine: 'Atorvastatin 10mg',
+    manufacturer: 'Cipla Ltd.',
+    mfg: '2024-02',
+    exp: '2026-02'
+  },
+  {
+    icon: '🧬',
+    medicine: 'Azithromycin 500',
+    manufacturer: 'Mankind Pharma',
+    mfg: '2024-06',
+    exp: '2026-06'
+  }
+];
+
+/* =============================================================
+   RENDER SAMPLE CARDS
+============================================================= */
+function renderSamples() {
+  const grid = document.getElementById('samplesGrid');
+  grid.innerHTML = SAMPLES.map((s, i) => {
+    const mfgFormatted = formatMonthDisplay(s.mfg);
+    const expFormatted = formatMonthDisplay(s.exp);
+    return `
+      <div class="sample-card" onclick="fillFromSample(${i})">
+        <span class="use-badge">↑ Use This</span>
+        <span class="sample-icon">${s.icon}</span>
+        <div class="sample-name">${s.medicine}</div>
+        <div class="sample-mfr">${s.manufacturer}</div>
+        <div class="sample-dates">
+          <span class="sample-date-pill">Mfg: ${mfgFormatted}</span>
+          <span class="sample-date-pill">Exp: ${expFormatted}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatMonthDisplay(ym) {
+  if (!ym) return '—';
+  const [y, m] = ym.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[parseInt(m)-1]} ${y}`;
+}
+
+function fillFromSample(idx) {
+  const s = SAMPLES[idx];
+  document.getElementById('fMedicine').value     = s.medicine;
+  document.getElementById('fManufacturer').value = s.manufacturer;
+  document.getElementById('fMfg').value          = s.mfg;
+  document.getElementById('fExp').value          = s.exp;
+  updatePreview();
+  // Scroll to form
+  document.querySelector('.main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Auto-generate after short delay
+  setTimeout(generateQR, 400);
+}
+
+/* =============================================================
+   LIVE JSON PREVIEW
+============================================================= */
+function buildJSON() {
+  const medicine     = document.getElementById('fMedicine').value.trim();
+  const manufacturer = document.getElementById('fManufacturer').value.trim();
+  const mfgRaw       = document.getElementById('fMfg').value;
+  const expRaw       = document.getElementById('fExp').value;
+  return {
+    medicine,
+    manufacturer,
+    mfg: mfgRaw ? formatMonthDisplay(mfgRaw) : '',
+    exp: expRaw ? formatMonthDisplay(expRaw) : ''
+  };
+}
+
+function updatePreview() {
+  const d = buildJSON();
+  const preview = document.getElementById('jsonPreview');
+  const btn     = document.getElementById('btnGenerate');
+
+  const allFilled = d.medicine && d.manufacturer && d.mfg && d.exp;
+  btn.disabled = !allFilled;
+
+  if (!d.medicine && !d.manufacturer) {
+    preview.innerHTML = '<span style="color:rgba(255,255,255,0.2); font-style:italic; font-family:\'DM Sans\', sans-serif; font-size:0.78rem;">Fill in the fields above to preview encoded data…</span>';
+    return;
+  }
+
+  const obj = {};
+  if (d.medicine)     obj.medicine     = d.medicine;
+  if (d.manufacturer) obj.manufacturer = d.manufacturer;
+  if (d.mfg)          obj.mfg          = d.mfg;
+  if (d.exp)          obj.exp          = d.exp;
+
+  preview.textContent = JSON.stringify(obj, null, 2);
+}
+
+/* =============================================================
+   GENERATE QR
+============================================================= */
+let lastJSON = '';
+
+function generateQR() {
+  const d = buildJSON();
+  if (!d.medicine || !d.manufacturer || !d.mfg || !d.exp) return;
+
+  const jsonStr = JSON.stringify({
+    medicine:     d.medicine,
+    manufacturer: d.manufacturer,
+    mfg:          d.mfg,
+    exp:          d.exp
+  });
+  lastJSON = jsonStr;
+
+  // Generate onto canvas via QRious
+  const canvas = document.getElementById('qrCanvas');
+  new QRious({
+    element: canvas,
+    value: jsonStr,
+    size: 220,
+    level: 'H',              // High error correction — more reliable scans
+    foreground: '#0A1628',   // Dark navy dots
+    background: '#FFFFFF',   // White background
+    padding: 10
+  });
+
+  // Show QR, hide placeholder
+  document.getElementById('qrPlaceholder').style.display = 'none';
+  document.getElementById('qrWrap').style.display        = 'block';
+
+  // Show med label
+  const label = document.getElementById('qrMedLabel');
+  label.style.display = 'block';
+  document.getElementById('qrMedName').textContent = d.medicine;
+  document.getElementById('qrMedMfr').textContent  = d.manufacturer;
+
+  // Enable download + copy
+  document.getElementById('btnDownload').disabled = false;
+  document.getElementById('btnCopyImg').disabled  = false;
+
+  // Update raw panel
+  const rawBox = document.getElementById('rawBox');
+  rawBox.classList.remove('raw-empty');
+  rawBox.textContent = JSON.stringify({
+    medicine:     d.medicine,
+    manufacturer: d.manufacturer,
+    mfg:          d.mfg,
+    exp:          d.exp
+  }, null, 2);
+
+  // Switch to QR tab
+  switchOutTab('qr');
+  showToast('✓ QR Code generated!');
+}
+
+/* =============================================================
+   DOWNLOAD QR
+============================================================= */
+function downloadQR() {
+  const canvas   = document.getElementById('qrCanvas');
+  const medName  = document.getElementById('fMedicine').value.trim() || 'medicine';
+  const filename = `pharmatrack-qr-${medName.replace(/\s+/g, '-').toLowerCase()}.png`;
+
+  // Create a larger canvas with label
+  const out     = document.createElement('canvas');
+  out.width     = 300;
+  out.height    = 360;
+  const ctx     = out.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#FFFFFF';
+  ctx.roundRect(0, 0, 300, 360, 12);
+  ctx.fill();
+
+  // QR code centered
+  ctx.drawImage(canvas, 40, 20, 220, 220);
+
+  // Medicine name text
+  ctx.fillStyle = '#0A1628';
+  ctx.font      = 'bold 16px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(medName, 150, 268);
+
+  // Manufacturer
+  ctx.fillStyle = '#555';
+  ctx.font      = '12px sans-serif';
+  const mfr = document.getElementById('fManufacturer').value.trim();
+  ctx.fillText(mfr, 150, 290);
+
+  // Dates
+  ctx.fillStyle = '#888';
+  ctx.font      = '11px sans-serif';
+  const mfg = formatMonthDisplay(document.getElementById('fMfg').value);
+  const exp = formatMonthDisplay(document.getElementById('fExp').value);
+  ctx.fillText(`Mfg: ${mfg}   Exp: ${exp}`, 150, 312);
+
+  // PharmaTrack watermark
+  ctx.fillStyle = '#02C39A';
+  ctx.font      = 'bold 11px sans-serif';
+  ctx.fillText('PharmaTrack Verified', 150, 342);
+
+  const link    = document.createElement('a');
+  link.download = filename;
+  link.href     = out.toDataURL('image/png');
+  link.click();
+  showToast('⬇ QR code downloaded!');
+}
+
+/* =============================================================
+   COPY QR TO CLIPBOARD
+============================================================= */
+async function copyQRToClipboard() {
+  const canvas = document.getElementById('qrCanvas');
+  canvas.toBlob(async blob => {
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'image/png': blob })
+      ]);
+      showToast('📋 QR image copied to clipboard!');
+    } catch {
+      showToast('⚠ Copy not supported — use Download instead.');
+    }
+  });
+}
+
+/* =============================================================
+   COPY RAW JSON
+============================================================= */
+function copyRaw() {
+  if (!lastJSON) return;
+  navigator.clipboard.writeText(lastJSON)
+    .then(() => showToast('📋 JSON copied to clipboard!'))
+    .catch(()  => showToast('⚠ Could not copy. Try manually.'));
+}
+
+/* =============================================================
+   OUTPUT TAB SWITCHER
+============================================================= */
+function switchOutTab(tab) {
+  document.getElementById('outTabQR').classList.toggle('active',  tab === 'qr');
+  document.getElementById('outTabRaw').classList.toggle('active', tab === 'raw');
+  document.getElementById('outPanelQR').classList.toggle('active',  tab === 'qr');
+  document.getElementById('outPanelRaw').classList.toggle('active', tab === 'raw');
+}
+
+/* =============================================================
+   TOAST
+============================================================= */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* =============================================================
+   INIT
+============================================================= */
+renderSamples();
+updatePreview();
+
+</script>
+</body>
+</html>
