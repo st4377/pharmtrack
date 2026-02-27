@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Smart Healthcare Awareness</title>
+<link rel="stylesheet" href="css/base.css">
+<style>
+  /* ---- HERO PAGE SPECIFIC ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 60% 40%, rgba(2, 128, 144, 0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(2, 195, 154, 0.1) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(2, 195, 154, 0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(2, 195, 154, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 680px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(2, 195, 154, 0.12);
+    border: 1px solid rgba(2, 195, 154, 0.3);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem; font-weight: 500;
+    color: var(--mint);
+    margin-bottom: 2rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--mint);
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  h1 em { font-style: italic; color: var(--mint); }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    max-width: 520px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-pills {
+    display: flex; flex-wrap: wrap; gap: 0.75rem;
+    margin-top: 2rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 100px;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.85rem; font-weight: 500;
+  }
+  .pill-icon { font-size: 1rem; }
+
+  .hero-actions {
+    display: flex; gap: 1rem; margin-top: 2.5rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  /* Phone Mockup */
+  .hero-visual {
+    position: absolute;
+    right: 4rem; top: 50%;
+    transform: translateY(-50%);
+    width: 420px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .phone-mockup {
+    width: 260px; margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 36px;
+    border: 2px solid rgba(2, 195, 154, 0.2);
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  }
+  .phone-notch {
+    width: 80px; height: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    margin: 0 auto 1.5rem;
+  }
+  .app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+  .app-logo-sm { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+  .app-logo-sm span { color: var(--mint); }
+  .status-dot { width: 8px; height: 8px; background: var(--mint); border-radius: 50%; box-shadow: 0 0 8px var(--mint); }
+
+  .scan-box {
+    background: rgba(2, 195, 154, 0.06);
+    border: 1px dashed rgba(2, 195, 154, 0.4);
+    border-radius: 16px;
+    padding: 1.5rem; text-align: center; margin-bottom: 1rem;
+  }
+  .qr-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 3px; width: 80px; margin: 0 auto 0.5rem; }
+  .qr-cell { width: 14px; height: 14px; border-radius: 2px; background: var(--mint); opacity: 0.8; }
+  .qr-cell.off { background: transparent; border: 1px solid rgba(2,195,154,0.2); }
+  .scan-label { font-size: 0.7rem; color: var(--mint); font-weight: 500; }
+
+  .result-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; padding: 0.8rem; font-size: 0.72rem; margin-bottom: 0.6rem;
+  }
+  .result-title { color: var(--mint); font-weight: 600; font-size: 0.75rem; margin-bottom: 0.3rem; }
+  .result-row { display: flex; justify-content: space-between; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+  .result-val { color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  .alt-cards { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+  .alt-card {
+    flex: 1;
+    background: rgba(2, 195, 154, 0.08);
+    border: 1px solid rgba(2, 195, 154, 0.2);
+    border-radius: 10px; padding: 0.6rem; font-size: 0.68rem; text-align: center;
+  }
+  .alt-name { font-weight: 600; color: var(--white); font-size: 0.73rem; }
+  .alt-sub { color: rgba(255,255,255,0.4); }
+
+  /* Module nav bar */
+  .module-bar {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.5rem;
+    background: rgba(10, 22, 40, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(2, 195, 154, 0.2);
+    border-radius: 100px;
+    padding: 0.5rem 1rem;
+    z-index: 200;
+  }
+  .module-bar a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.35rem 0.8rem;
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .hero-visual { display: none; }
+    .hero { padding: 7rem 2rem 4rem; }
+    .module-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="pages/features.html">Features</a></li>
+    <li><a href="pages/safety.html">Safety</a></li>
+    <li><a href="pages/accessibility.html">Accessibility</a></li>
+    <li><a href="pages/sdg.html">Mission</a></li>
+    <li><a href="pages/tech.html">Tech Stack</a></li>
+    <li><a href="pages/tech.html" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<!-- MODULE BAR -->
+<div class="module-bar">
+  <a href="index.html" class="active">🏠 Home</a>
+  <a href="pages/problem.html">⚠️ Problem</a>
+  <a href="pages/features.html">✨ Features</a>
+  <a href="pages/safety.html">🛡️ Safety</a>
+  <a href="pages/accessibility.html">♿ Access</a>
+  <a href="pages/sdg.html">🌍 Mission</a>
+  <a href="pages/tech.html">⚙️ Tech</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">B.Tech Minor Project · Dept. of Networking and Communications</div>
+    <h1>Smart <em>Healthcare</em><br>For Everyone</h1>
+    <p class="hero-sub">PharmaTrack is an intelligent, inclusive platform that enhances healthcare awareness and provides essential assistance in medicine management — designed for India's diverse population.</p>
+    <div class="hero-pills">
+      <div class="pill"><span class="pill-icon">🔬</span>Medicine Safety</div>
+      <div class="pill"><span class="pill-icon">📱</span>QR Verification</div>
+      <div class="pill"><span class="pill-icon">🚨</span>Emergency Support</div>
+      <div class="pill"><span class="pill-icon">♿</span>Accessibility</div>
+    </div>
+    <div class="hero-actions">
+      <a href="pages/features.html" class="btn-primary">Explore Features</a>
+      <a href="pages/tech.html" class="btn-outline">View Tech Stack</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="phone-notch"></div>
+      <div class="app-header">
+        <div class="app-logo-sm">Pharm<span>Track</span></div>
+        <div class="status-dot"></div>
+      </div>
+      <div class="scan-box">
+        <div class="qr-grid">
+          <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell off"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+          <div class="qr-cell off"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell off"></div><div class="qr-cell"></div>
+          <div class="qr-cell"></div><div class="qr-cell off"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell off"></div>
+          <div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell off"></div><div class="qr-cell"></div><div class="qr-cell"></div>
+          <div class="qr-cell off"></div><div class="qr-cell"></div><div class="qr-cell"></div><div class="qr-cell off"></div><div class="qr-cell"></div>
+        </div>
+        <div class="scan-label">Tap to Scan QR Code</div>
+      </div>
+      <div class="result-card">
+        <div class="result-title">✓ Verified — Dolo 650</div>
+        <div class="result-row"><span>Batch</span><span class="result-val">DL2024-09A</span></div>
+        <div class="result-row"><span>Expiry</span><span class="result-val">Mar 2026</span></div>
+        <div class="result-row"><span>Manufacturer</span><span class="result-val">Micro Labs</span></div>
+      </div>
+      <div style="font-size:0.72rem; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem;">Alternatives Available</div>
+      <div class="alt-cards">
+        <div class="alt-card"><div class="alt-name">Calpol 650</div><div class="alt-sub">Paracetamol</div></div>
+        <div class="alt-card"><div class="alt-name">Paracip 650</div><div class="alt-sub">Paracetamol</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Accessibility & Support</title>
+<link rel="stylesheet" href="../css/base.css">
+<style>
+  .page-hero {
+    padding: 10rem 4rem 4rem;
+    background: var(--navy);
+    position: relative; overflow: hidden;
+  }
+  .page-hero::before { content: ''; position: absolute; bottom: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(2,195,154,0.08) 0%, transparent 70%); pointer-events: none; }
+  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
+  .breadcrumb a { color: var(--mint); text-decoration: none; }
+  .breadcrumb span { color: rgba(255,255,255,0.2); }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -1px; animation: fadeUp 0.5s 0.1s ease both; }
+  .page-title em { font-style: italic; color: var(--mint); }
+  .page-sub { margin-top: 1.2rem; color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.7; max-width: 560px; animation: fadeUp 0.5s 0.2s ease both; }
+
+  .access-section { padding: 5rem 4rem; }
+
+  /* Top 3 grid */
+  .top-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+
+  .access-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .access-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), var(--mint)); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .access-card:hover::after { transform: scaleX(1); }
+  .access-card:hover { border-color: rgba(2, 195, 154, 0.2); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+  .access-icon { font-size: 2.2rem; margin-bottom: 1.2rem; display: block; }
+  .access-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .access-card p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* Wide 2-col grid */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+  .access-card-wide { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 2rem; transition: all 0.3s; position: relative; overflow: hidden; }
+  .access-card-wide::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--teal), var(--mint)); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .access-card-wide:hover::after { transform: scaleX(1); }
+  .access-card-wide:hover { border-color: rgba(2, 195, 154, 0.2); transform: translateY(-4px); }
+  .access-card-wide h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .access-card-wide p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  /* Reminder Demo Card */
+  .reminder-demo {
+    margin-top: 4rem;
+    background: linear-gradient(135deg, rgba(2,128,144,0.12), rgba(2,195,154,0.06));
+    border: 1px solid rgba(2,195,154,0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+  }
+  .reminder-demo h3 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; margin-bottom: 1rem; }
+  .reminder-demo p { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.75; }
+
+  .reminder-visual {
+    background: var(--card-bg);
+    border: 1px solid rgba(2,195,154,0.15);
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
+  .reminder-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.85rem;
+  }
+  .reminder-row:last-child { border-bottom: none; }
+  .reminder-med { font-weight: 500; }
+  .reminder-time { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
+  .reminder-status { font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 100px; }
+  .status-done { background: rgba(76,175,80,0.15); color: #81c784; }
+  .status-next { background: rgba(2,195,154,0.15); color: var(--mint); }
+  .status-miss { background: rgba(244,67,54,0.15); color: #ef9a9a; }
+
+  .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+  .page-nav a:hover { color: var(--mint); }
+
+  .module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2, 195, 154, 0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
+  .module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .top-grid { grid-template-columns: 1fr 1fr; }
+    .bottom-grid { grid-template-columns: 1fr; }
+    .reminder-demo { grid-template-columns: 1fr; }
+    .access-section { padding: 4rem 2rem; }
+    .page-hero { padding: 8rem 2rem 3rem; }
+    .page-nav { padding: 2rem; }
+    .module-bar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .top-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="features.html">Features</a></li>
+    <li><a href="safety.html">Safety</a></li>
+    <li><a href="accessibility.html">Accessibility</a></li>
+    <li><a href="sdg.html">Mission</a></li>
+    <li><a href="tech.html">Tech Stack</a></li>
+    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<div class="module-bar">
+  <a href="../index.html">🏠 Home</a>
+  <a href="problem.html">⚠️ Problem</a>
+  <a href="features.html">✨ Features</a>
+  <a href="safety.html">🛡️ Safety</a>
+  <a href="accessibility.html" class="active">♿ Access</a>
+  <a href="sdg.html">🌍 Mission</a>
+  <a href="tech.html">⚙️ Tech</a>
+</div>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>Accessibility & Support</span>
+    </div>
+    <div class="section-label" style="animation: fadeUp 0.5s ease both;">Ensuring Well-being</div>
+    <h2 class="page-title">Safety & <em>Emergency</em><br>Support</h2>
+    <p class="page-sub">Comprehensive tools that guide users through emergencies, prevent medication errors, and ensure every Indian — regardless of age or tech-savviness — can use PharmaTrack with confidence.</p>
+  </div>
+</section>
+
+<section class="access-section">
+  <div class="top-grid">
+    <div class="access-card reveal">
+      <span class="access-icon">📍</span>
+      <h3>Emergency Mode</h3>
+      <p>Finds nearby hospitals using real-time live location data. Displays contact numbers, estimated distance, and the fastest route — reducing panic and critical response time during medical emergencies.</p>
+    </div>
+    <div class="access-card reveal">
+      <span class="access-icon">⚠️</span>
+      <h3>Precautions & Safety Warnings</h3>
+      <p>Provides drug-specific guidance for every medication. Example: Ibuprofen — warns against empty stomach consumption, advises caution for kidney conditions. Covers food interactions and activities to avoid.</p>
+    </div>
+    <div class="access-card reveal">
+      <span class="access-icon">🔗</span>
+      <h3>Safe Combination Guidance</h3>
+      <p>Warns about unsafe drug-drug interactions in real time. Example: Advises against Iron + Calcium supplements together; recommends timed separation to prevent adverse reactions from polypharmacy.</p>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="access-card-wide reveal">
+      <span class="access-icon" style="font-size:2.2rem; display:block; margin-bottom:1.2rem;">📅</span>
+      <h3>Medicine Cycle & Reminders</h3>
+      <p>Users set up detailed cycles documenting dosage, frequency, and duration for each medication. Automated reminders prevent missed or repeated doses with fully customizable scheduling. Visual tracking of completed, upcoming, and missed doses across all prescribed medications.</p>
+    </div>
+    <div class="access-card-wide reveal">
+      <span class="access-icon" style="font-size:2.2rem; display:block; margin-bottom:1.2rem;">👴</span>
+      <h3>Inclusive Design & Accessibility</h3>
+      <p>Information presented with clear, intuitive icons and minimal text to reduce cognitive load. Designed specifically for the elderly, rural individuals, and non-technical users with large text and high-contrast UI. Universal usability is a core design principle, not an afterthought — every interaction is tested for ease of use.</p>
+    </div>
+  </div>
+
+  <!-- Reminder Demo -->
+  <div class="reminder-demo reveal">
+    <div>
+      <div class="section-label">Feature Demo</div>
+      <h3>Medicine Cycle Tracking in Action</h3>
+      <p>A visual, real-time overview of your daily medication schedule. PharmaTrack tracks each dose — completed, upcoming, or missed — so patients and caregivers always know the status.</p>
+    </div>
+    <div class="reminder-visual">
+      <div style="font-size:0.7rem; color:var(--mint); font-weight:600; margin-bottom:1rem;">TODAY'S MEDICATION SCHEDULE</div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Metformin 500mg</div>
+          <div class="reminder-time">After breakfast</div>
+        </div>
+        <span class="reminder-status status-done">✓ Done</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Dolo 650</div>
+          <div class="reminder-time">2:00 PM — with water</div>
+        </div>
+        <span class="reminder-status status-next">⏱ Next</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Vitamin D3</div>
+          <div class="reminder-time">7:00 AM — morning</div>
+        </div>
+        <span class="reminder-status status-miss">✗ Missed</span>
+      </div>
+      <div class="reminder-row">
+        <div>
+          <div class="reminder-med">Atorvastatin 10mg</div>
+          <div class="reminder-time">9:00 PM — after dinner</div>
+        </div>
+        <span class="reminder-status" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);">Upcoming</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-nav">
+  <a href="safety.html">← Safety & Verification</a>
+  <a href="sdg.html">Mission & SDG →</a>
+</div>
+
+<footer>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Core Features</title>
+<link rel="stylesheet" href="../css/base.css">
+<style>
+  .page-hero {
+    padding: 10rem 4rem 4rem;
+    background: var(--dark);
+    position: relative; overflow: hidden;
+  }
+  .page-hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 70% 30%, rgba(2,195,154,0.1) 0%, transparent 70%);
+  }
+  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
+  .breadcrumb a { color: var(--mint); text-decoration: none; }
+  .breadcrumb span { color: rgba(255,255,255,0.2); }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -1px; animation: fadeUp 0.5s 0.1s ease both; }
+  .page-title em { font-style: italic; color: var(--mint); }
+  .page-sub { margin-top: 1.2rem; color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.7; max-width: 560px; animation: fadeUp 0.5s 0.2s ease both; }
+
+  /* Features */
+  .features-section { padding: 5rem 4rem; }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+    margin-top: 3rem;
+  }
+
+  .feat-card-lg {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .feat-card-lg::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--mint));
+    transform: scaleX(0); transition: transform 0.3s; transform-origin: left;
+  }
+  .feat-card-lg:hover::after { transform: scaleX(1); }
+  .feat-card-lg:hover { border-color: rgba(2, 195, 154, 0.2); transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+
+  .feat-icon-lg { font-size: 2.2rem; margin-bottom: 1.2rem; display: block; }
+  .feat-card-lg h3 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .feat-card-lg p { font-size: 0.85rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+  .feat-tag {
+    display: inline-block;
+    margin-top: 1rem;
+    background: rgba(2,195,154,0.1);
+    color: var(--mint);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    border: 1px solid rgba(2,195,154,0.2);
+  }
+
+  /* Category Divider */
+  .category-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin: 3rem 0 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .category-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.07);
+  }
+
+  /* Summary Banner */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1.2rem; margin-top: 4rem;
+    padding: 2.5rem;
+    background: rgba(2,195,154,0.05);
+    border: 1px solid rgba(2,195,154,0.15);
+    border-radius: 24px;
+  }
+  .summary-item { text-align: center; }
+  .summary-num { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--mint); }
+  .summary-label { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-top: 0.3rem; }
+
+  .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+  .page-nav a:hover { color: var(--mint); }
+
+  .module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2, 195, 154, 0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
+  .module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .features-grid { grid-template-columns: repeat(2,1fr); }
+    .summary-grid { grid-template-columns: repeat(2,1fr); }
+    .features-section { padding: 4rem 2rem; }
+    .page-hero { padding: 8rem 2rem 3rem; }
+    .page-nav { padding: 2rem; }
+    .module-bar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="features.html">Features</a></li>
+    <li><a href="safety.html">Safety</a></li>
+    <li><a href="accessibility.html">Accessibility</a></li>
+    <li><a href="sdg.html">Mission</a></li>
+    <li><a href="tech.html">Tech Stack</a></li>
+    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<div class="module-bar">
+  <a href="../index.html">🏠 Home</a>
+  <a href="problem.html">⚠️ Problem</a>
+  <a href="features.html" class="active">✨ Features</a>
+  <a href="safety.html">🛡️ Safety</a>
+  <a href="accessibility.html">♿ Access</a>
+  <a href="sdg.html">🌍 Mission</a>
+  <a href="tech.html">⚙️ Tech</a>
+</div>
+
+<section class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>Core Features</span>
+    </div>
+    <div class="section-label" style="animation: fadeUp 0.5s ease both;">Core Features</div>
+    <h2 class="page-title">One Platform.<br><em>Complete</em> Coverage.</h2>
+    <p class="page-sub">A holistic suite of capabilities designed to solve every key pain point in medicine management and emergency preparedness.</p>
+  </div>
+</section>
+
+<section class="features-section">
+
+  <div class="category-label reveal">Medicine Management</div>
+  <div class="features-grid">
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">🔄</span>
+      <h3>Alternative Medicine</h3>
+      <p>Safe equivalents based on active drug composition — find substitutes instantly when your medicine is unavailable at the pharmacy.</p>
+      <span class="feat-tag">Core Feature</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">📷</span>
+      <h3>QR Verification</h3>
+      <p>Authenticate medicines — verify batch number, expiry date, and manufacturer in seconds with a simple scan of the QR code.</p>
+      <span class="feat-tag">Anti-Counterfeit</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">⚗️</span>
+      <h3>Combination Guide</h3>
+      <p>Real-time warnings about unsafe drug-drug interactions — prevent adverse reactions from uninformed polypharmacy.</p>
+      <span class="feat-tag">Safety Critical</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">⏰</span>
+      <h3>Dose Reminders</h3>
+      <p>Personalized cycles with intelligent scheduling alerts — automated reminders prevent missed or repeated doses throughout the day.</p>
+      <span class="feat-tag">Adherence</span>
+    </div>
+  </div>
+
+  <div class="category-label reveal">Emergency & Safety</div>
+  <div class="features-grid">
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">🚨</span>
+      <h3>Emergency Mode</h3>
+      <p>Nearby hospitals, optimal routes, and contact numbers — instantly accessible during critical medical situations to reduce panic.</p>
+      <span class="feat-tag">Life-Saving</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">🛡️</span>
+      <h3>Safety Warnings</h3>
+      <p>Drug-specific precautions, food interactions, and side effects — comprehensive guidance for every medication in your profile.</p>
+      <span class="feat-tag">Awareness</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">🌏</span>
+      <h3>Regional Languages</h3>
+      <p>Multi-language support for India's diverse population — breaking the English-only barrier that excludes rural and elderly users.</p>
+      <span class="feat-tag">Inclusivity</span>
+    </div>
+    <div class="feat-card-lg reveal">
+      <span class="feat-icon-lg">♿</span>
+      <h3>Inclusive Design</h3>
+      <p>Large text, high contrast, simple icons — designed for the elderly, rural individuals, and non-technical users from the ground up.</p>
+      <span class="feat-tag">Accessibility</span>
+    </div>
+  </div>
+
+  <div class="summary-grid reveal">
+    <div class="summary-item">
+      <div class="summary-num">8</div>
+      <div class="summary-label">Core Features</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">∞</div>
+      <div class="summary-label">Medicine Database</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">10+</div>
+      <div class="summary-label">Regional Languages</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num">24/7</div>
+      <div class="summary-label">Emergency Access</div>
+    </div>
+  </div>
+</section>
+
+<div class="page-nav">
+  <a href="problem.html">← The Challenge</a>
+  <a href="safety.html">Safety & Verification →</a>
+</div>
+
+<footer>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

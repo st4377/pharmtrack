@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — Safety & Verification</title>
+<link rel="stylesheet" href="../css/base.css">
+<style>
+  .page-hero {
+    padding: 10rem 4rem 4rem;
+    background: rgba(2, 128, 144, 0.05);
+    border-bottom: 1px solid rgba(2, 195, 154, 0.1);
+    position: relative; overflow: hidden;
+  }
+  .page-hero::before { content: ''; position: absolute; top: -100px; left: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(2,195,154,0.07) 0%, transparent 70%); pointer-events: none; }
+  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; animation: fadeUp 0.5s ease both; }
+  .breadcrumb a { color: var(--mint); text-decoration: none; }
+  .breadcrumb span { color: rgba(255,255,255,0.2); }
+  .page-title { font-family: 'DM Serif Display', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: 1.05; letter-spacing: -1px; animation: fadeUp 0.5s 0.1s ease both; }
+  .page-title em { font-style: italic; color: var(--mint); }
+  .page-sub { margin-top: 1.2rem; color: rgba(255,255,255,0.55); font-size: 1rem; line-height: 1.7; max-width: 560px; animation: fadeUp 0.5s 0.2s ease both; }
+
+  /* Deep Dive Section */
+  .safety-section { padding: 5rem 4rem; }
+
+  .deepdive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-bottom: 4rem; }
+
+  .info-block { margin-bottom: 2.5rem; }
+  .info-block h3 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  .info-block h3 .tag { font-family: 'DM Sans', sans-serif; font-size: 0.65rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(2, 195, 154, 0.15); color: var(--mint); padding: 0.2rem 0.6rem; border-radius: 100px; }
+  .info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .info-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 1rem; }
+  .info-item-label { font-size: 0.7rem; color: var(--mint); font-weight: 600; margin-bottom: 0.4rem; }
+  .info-item-val { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+  /* Case Study Card */
+  .case-card { background: var(--card-bg); border: 1px solid rgba(2, 195, 154, 0.15); border-radius: 20px; padding: 2rem; }
+  .case-badge { display: inline-block; background: rgba(2, 195, 154, 0.1); color: var(--mint); font-size: 0.72rem; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 1rem; border: 1px solid rgba(2,195,154,0.2); }
+  .case-card p { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 1.5rem; font-style: italic; }
+
+  .steps { display: flex; flex-direction: column; gap: 0.75rem; }
+  .step { display: flex; align-items: flex-start; gap: 1rem; }
+  .step-num { min-width: 28px; height: 28px; background: linear-gradient(135deg, var(--teal), var(--mint)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--dark); flex-shrink: 0; }
+  .step-content h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+  .step-content p { font-size: 0.8rem; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+  /* Medicine example section */
+  .divider { height: 1px; background: rgba(255,255,255,0.07); margin: 3rem 0; }
+
+  .example-section h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+  .example-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+
+  .example-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  .example-card:hover { border-color: rgba(2,195,154,0.3); }
+  .example-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--mint); margin-bottom: 0.8rem; }
+  .example-card p { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .example-icon { font-size: 1.4rem; margin-bottom: 0.8rem; display: block; }
+
+  .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
+  .page-nav a:hover { color: var(--mint); }
+
+  .module-bar { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; background: rgba(10, 22, 40, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(2, 195, 154, 0.2); border-radius: 100px; padding: 0.5rem 1rem; z-index: 200; }
+  .module-bar a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.78rem; font-weight: 500; padding: 0.35rem 0.8rem; border-radius: 100px; transition: all 0.2s; }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .deepdive-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .example-grid { grid-template-columns: 1fr 1fr; }
+    .safety-section { padding: 4rem 2rem; }
+    .page-hero { padding: 8rem 2rem 3rem; }
+    .page-nav { padding: 2rem; }
+    .module-bar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .info-row { grid-template-columns: 1fr; }
+    .example-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="features.html">Features</a></li>
+    <li><a href="safety.html">Safety</a></li>
+    <li><a href="accessibility.html">Accessibility</a></li>
+    <li><a href="sdg.html">Mission</a></li>
+    <li><a href="tech.html">Tech Stack</a></li>
+    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<div class="module-bar">
+  <a href="../index.html">🏠 Home</a>
+  <a href="problem.html">⚠️ Problem</a>
+  <a href="features.html">✨ Features</a>
+  <a href="safety.html" class="active">🛡️ Safety</a>
+  <a href="accessibility.html">♿ Access</a>
+  <a href="sdg.html">🌍 Mission</a>
+  <a href="tech.html">⚙️ Tech</a>
+</div>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>Safety & Verification</span>
+    </div>
+    <div class="section-label" style="animation: fadeUp 0.5s ease both;">Pillars of Safety</div>
+    <h2 class="page-title">Medicine Awareness<br>& <em>Verification</em></h2>
+    <p class="page-sub">Deep-dive into how PharmaTrack ensures every medicine you take is authentic, safe, and properly understood.</p>
+  </div>
+</section>
+
+<section class="safety-section">
+  <div class="deepdive-grid">
+    <!-- Left Column -->
+    <div>
+      <div class="info-block reveal">
+        <h3>Alternative Medicine <span class="tag">Suggestion</span></h3>
+        <div class="info-row">
+          <div class="info-item">
+            <div class="info-item-label">Mechanism</div>
+            <div class="info-item-val">Users input prescribed medicine; system identifies chemically equivalent alternatives using active compound matching.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-label">Example</div>
+            <div class="info-item-val">'Dolo 650' unavailable? → Suggests 'Calpol 650' or 'Paracip 650' instantly.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Benefit</div>
+          <div class="info-item-val">Ensures continuity of treatment and reduces multiple pharmacy visits, saving time and reducing health risks from treatment delays.</div>
+        </div>
+      </div>
+
+      <div class="info-block reveal">
+        <h3>QR Verification <span class="tag">Authentication</span></h3>
+        <div class="info-row">
+          <div class="info-item">
+            <div class="info-item-label">Mechanism</div>
+            <div class="info-item-val">Scan unique QR code on medicine packaging via the app — instant cloud verification against the authenticated database.</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-label">Info Displayed</div>
+            <div class="info-item-val">Manufacturer details, batch number, manufacturing date, and expiry date — all cryptographically verified.</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Why It Matters</div>
+          <div class="info-item-val">Counterfeit drugs are a growing crisis. PharmaTrack gives users the power to verify authenticity in seconds, before consuming any medication.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Case Study -->
+    <div class="reveal">
+      <div class="section-label" style="margin-bottom:1.5rem;">Case Study</div>
+      <h2 style="font-size:clamp(1.5rem,3vw,2.2rem);">The Critical Need<br>for QR Verification</h2>
+      <div class="case-card" style="margin-top:1.5rem;">
+        <span class="case-badge">Real-World Impact · 2023</span>
+        <p>A reported incident in 2023 highlighted severe consequences of counterfeit drugs — a patient experienced delayed recovery and adverse effects after consuming a fake antibiotic that passed visual inspection but failed chemical verification.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Detection</h4>
+              <p>PharmaTrack detects invalid or duplicated QR codes before the user even opens the packaging — immediate red flag alert.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Prevention</h4>
+              <p>Real-time alert system warns users to avoid potentially harmful counterfeit medications and guides them to a legitimate source.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Trust Restoration</h4>
+              <p>Reliable authentication mechanism significantly improves medicine safety and rebuilds public trust in pharmaceuticals.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Medicine Examples -->
+  <div class="example-section reveal">
+    <div class="section-label">Drug Safety Examples</div>
+    <h3>Real Precautions Powered by PharmaTrack</h3>
+    <div class="example-grid">
+      <div class="example-card">
+        <span class="example-icon">💊</span>
+        <h4>Ibuprofen</h4>
+        <p>⚠️ Avoid on empty stomach. Caution for kidney conditions. Do not combine with blood thinners. Take with food or milk to reduce gastric irritation.</p>
+      </div>
+      <div class="example-card">
+        <span class="example-icon">🩸</span>
+        <h4>Iron + Calcium</h4>
+        <p>⚠️ Do not take together — calcium blocks iron absorption. Recommended spacing: at least 2 hours apart. Take iron with Vitamin C for better absorption.</p>
+      </div>
+      <div class="example-card">
+        <span class="example-icon">🧠</span>
+        <h4>Metformin</h4>
+        <p>⚠️ Avoid alcohol while taking. Monitor for lactic acidosis symptoms. Kidney function must be checked regularly during use of this medication.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-nav">
+  <a href="features.html">← Core Features</a>
+  <a href="accessibility.html">Accessibility & Support →</a>
+</div>
+
+<footer>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

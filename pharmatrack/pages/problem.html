@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTrack — The Challenge</title>
+<link rel="stylesheet" href="../css/base.css">
+<style>
+  .page-hero {
+    padding: 10rem 4rem 4rem;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(2, 128, 144, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .page-hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(2, 195, 154, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(2, 195, 154, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .page-hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+  .breadcrumb {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.8rem; color: rgba(255,255,255,0.4);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.5s ease both;
+  }
+  .breadcrumb a { color: var(--mint); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { color: rgba(255,255,255,0.2); }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .page-title em { font-style: italic; color: var(--mint); }
+
+  .page-sub {
+    margin-top: 1.2rem;
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 560px;
+    animation: fadeUp 0.5s 0.2s ease both;
+  }
+
+  /* Problem Grid */
+  .problem-section { padding: 5rem 4rem; }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .problem-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px;
+    padding: 2rem;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--mint));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .problem-card:hover { border-color: rgba(2, 195, 154, 0.3); transform: translateY(-4px); }
+  .problem-card:hover::before { transform: scaleX(1); }
+
+  .prob-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    background: rgba(2, 195, 154, 0.1);
+  }
+  .problem-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.15rem; margin-bottom: 0.6rem; }
+  .problem-card p { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.65; }
+
+  .stat-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    background: rgba(2,195,154,0.1);
+    color: var(--mint);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    border: 1px solid rgba(2,195,154,0.2);
+  }
+
+  .cta-banner {
+    margin-top: 4rem;
+    background: linear-gradient(135deg, rgba(2,128,144,0.15), rgba(2,195,154,0.08));
+    border: 1px solid rgba(2,195,154,0.2);
+    border-radius: 24px;
+    padding: 3rem;
+    display: flex; justify-content: space-between; align-items: center; gap: 2rem;
+  }
+  .cta-banner h3 { font-family: 'DM Serif Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .cta-banner p { color: rgba(255,255,255,0.55); font-size: 0.9rem; max-width: 400px; line-height: 1.6; }
+  .cta-actions { display: flex; gap: 1rem; flex-shrink: 0; }
+
+  /* Bottom Nav */
+  .page-nav {
+    display: flex; justify-content: space-between;
+    padding: 2rem 4rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .page-nav a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.2s;
+  }
+  .page-nav a:hover { color: var(--mint); }
+
+  /* Module bar */
+  .module-bar {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.5rem;
+    background: rgba(10, 22, 40, 0.92);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(2, 195, 154, 0.2);
+    border-radius: 100px;
+    padding: 0.5rem 1rem;
+    z-index: 200;
+  }
+  .module-bar a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 0.35rem 0.8rem;
+    border-radius: 100px;
+    transition: all 0.2s;
+  }
+  .module-bar a:hover { color: var(--mint); background: rgba(2,195,154,0.1); }
+  .module-bar a.active { color: var(--dark); background: var(--mint); font-weight: 600; }
+
+  @media (max-width: 1100px) {
+    .problem-grid { grid-template-columns: repeat(2,1fr); }
+    .problem-section { padding: 4rem 2rem; }
+    .page-hero { padding: 8rem 2rem 3rem; }
+    .cta-banner { flex-direction: column; }
+    .page-nav { padding: 2rem; }
+    .module-bar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <ul>
+    <li><a href="features.html">Features</a></li>
+    <li><a href="safety.html">Safety</a></li>
+    <li><a href="accessibility.html">Accessibility</a></li>
+    <li><a href="sdg.html">Mission</a></li>
+    <li><a href="tech.html">Tech Stack</a></li>
+    <li><a href="tech.html" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+
+<div class="module-bar">
+  <a href="../index.html">🏠 Home</a>
+  <a href="problem.html" class="active">⚠️ Problem</a>
+  <a href="features.html">✨ Features</a>
+  <a href="safety.html">🛡️ Safety</a>
+  <a href="accessibility.html">♿ Access</a>
+  <a href="sdg.html">🌍 Mission</a>
+  <a href="tech.html">⚙️ Tech</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-content">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>›</span>
+      <span>The Challenge</span>
+    </div>
+    <div class="section-label" style="animation: fadeUp 0.5s ease both;">The Challenge</div>
+    <h2 class="page-title">Addressing Critical Gaps<br>in <em>Healthcare</em></h2>
+    <p class="page-sub">PharmaTrack tackles real, life-impacting issues that affect millions of patients — especially in India's rural and elderly communities.</p>
+  </div>
+</section>
+
+<!-- PROBLEMS -->
+<section class="problem-section">
+  <div class="problem-grid">
+    <div class="problem-card reveal">
+      <div class="prob-icon">💊</div>
+      <h3>Medicine Unavailability</h3>
+      <p>Patients lack knowledge of safe alternatives when prescribed medicines are unavailable, causing dangerous treatment delays and repeated pharmacy visits.</p>
+      <span class="stat-badge">⚠️ High Impact</span>
+    </div>
+    <div class="problem-card reveal">
+      <div class="prob-icon">⚠️</div>
+      <h3>Counterfeit Medicines</h3>
+      <p>Rising prevalence of fake drugs poses serious health risks, leading to ineffective treatments and severe adverse reactions with no way to verify authenticity.</p>
+      <span class="stat-badge">🔴 Critical Risk</span>
+    </div>
+    <div class="problem-card reveal">
+      <div class="prob-icon">🚑</div>
+      <h3>Emergency Preparedness</h3>
+      <p>Panic and time loss occur during emergencies due to lack of immediate access to nearby hospitals, contact numbers, and critical routing information.</p>
+      <span class="stat-badge">⏱️ Time-Sensitive</span>
+    </div>
+    <div class="problem-card reveal">
+      <div class="prob-icon">📋</div>
+      <h3>Dosage Errors</h3>
+      <p>Poor understanding of dosage, precautions, and side effects leads to incorrect usage and serious complications — particularly among elderly patients.</p>
+      <span class="stat-badge">👴 Elderly at Risk</span>
+    </div>
+    <div class="problem-card reveal">
+      <div class="prob-icon">🔗</div>
+      <h3>Unsafe Combinations</h3>
+      <p>Lack of guidance on unsafe drug combinations and missed doses due to absent reminders compounds health risks from polypharmacy in multi-condition patients.</p>
+      <span class="stat-badge">💊 Polypharmacy</span>
+    </div>
+    <div class="problem-card reveal">
+      <div class="prob-icon">🌐</div>
+      <h3>Non-Inclusive Apps</h3>
+      <p>Existing digital solutions are complex, English-centric, and not designed for elderly or rural Indian populations — the people who need help the most.</p>
+      <span class="stat-badge">🌍 Rural Gap</span>
+    </div>
+  </div>
+
+  <div class="cta-banner reveal">
+    <div>
+      <h3>PharmaTrack Solves All of These</h3>
+      <p>One unified platform addressing every critical gap — from verification to emergency support to inclusive design for every Indian user.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="features.html" class="btn-primary">See Features →</a>
+      <a href="safety.html" class="btn-outline">Safety Info</a>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE NAV -->
+<div class="page-nav">
+  <a href="../index.html">← Home</a>
+  <a href="features.html">Features →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="../index.html" class="logo">Pharm<span>Track</span></a>
+  <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
+  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Computer Science</p>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>
