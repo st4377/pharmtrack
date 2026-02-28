@@ -714,10 +714,16 @@ function processImageFile(file) {
       fileScanner.clear();
       parseAndDisplay(decodedText);
     })
-    .catch(() => {
+    .catch((err) => {
       fileScanner.clear();
-      document.getElementById('r-error-msg').textContent =
-        'No QR code detected in this image. Please try a clearer, well-lit photo with the full QR code visible.';
+      let msg = 'No QR code detected in this image.';
+      msg += '\n\nTips for better results:';
+      msg += '\n• Ensure the QR code is sharp and well-lit.';
+      msg += '\n• Avoid glare, blur, or shadows.';
+      msg += '\n• Make sure the full QR code is visible.';
+      msg += '\n• Try cropping the image to just the QR code.';
+      if (err && err.message) msg += `\n\nError: ${err.message}`;
+      document.getElementById('r-error-msg').textContent = msg;
       showRState('r-error');
     });
 }
