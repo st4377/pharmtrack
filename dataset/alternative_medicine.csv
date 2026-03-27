@@ -1,18 +1,64 @@
 brand,name,chemical_composition,price,form
-Generic Pain Co,pain relief,Acetylsalicylic Acid 81mg,1.8,Tablet
+Generic Pain Co,aspirin,Acetylsalicylic Acid 81mg,0.8,Tablet
 Bayer,aspirin,Acetylsalicylic Acid 81mg,1.0,Tablet
 Bufferin,aspirin,Acetylsalicylic Acid 81mg,1.2,Tablet
 Ecotrin,aspirin,Acetylsalicylic Acid 81mg,1.5,Tablet
 Anacin,aspirin,Acetylsalicylic Acid 500mg,2.1,Tablet
 Generic Pharma,paracetamol,Paracetamol 500mg,0.5,Tablet
+P-500,paracetamol,Paracetamol 500mg,0.6,Tablet
 Crocin,paracetamol,Paracetamol 500mg,1.2,Tablet
-Dolo,paracetamol,Paracetamol 650mg,1.5,Tablet
 Calpol,paracetamol,Paracetamol 500mg,1.3,Tablet
+Dolo,paracetamol,Paracetamol 650mg,1.5,Tablet
+Tylenol,paracetamol,Paracetamol 500mg,2.0,Tablet
+Generic Ibu,ibuprofen,Ibuprofen 200mg,0.9,Tablet
 Brufen,ibuprofen,Ibuprofen 400mg,1.4,Tablet
+Combiflam,ibuprofen,Ibuprofen 400mg,1.6,Tablet
+Nurofen,ibuprofen,Ibuprofen 400mg,1.8,Tablet
 Advil,ibuprofen,Ibuprofen 200mg,2.2,Tablet
+Ocid,omeprazole,Omeprazole 20mg,1.0,Capsule
 Omez,omeprazole,Omeprazole 20mg,1.2,Capsule
-Zyrtec,cetirizine,Cetirizine 10mg,1.5,Tablet
+Omepral,omeprazole,Omeprazole 20mg,1.4,Capsule
+Prilosec,omeprazole,Omeprazole 20mg,2.5,Capsule
 Cetzine,cetirizine,Cetirizine 10mg,0.7,Tablet
-Azee,azithromycin,Azithromycin 500mg,2.0,Tablet
-Glucophage,metformin,Metformin 500mg,1.8,Tablet
+Alerid,cetirizine,Cetirizine 10mg,0.8,Tablet
+Allercet,cetirizine,Cetirizine 10mg,0.9,Tablet
+Zyrtec,cetirizine,Cetirizine 10mg,1.5,Tablet
 Glycomet,metformin,Metformin 500mg,0.9,Tablet
+Metlong,metformin,Metformin 500mg,1.1,Tablet
+Glucophage,metformin,Metformin 500mg,1.8,Tablet
+Fortamet,metformin,Metformin 1000mg,2.2,Tablet
+Azithral,azithromycin,Azithromycin 500mg,1.8,Tablet
+Azee,azithromycin,Azithromycin 500mg,2.0,Tablet
+Zithromax,azithromycin,Azithromycin 500mg,3.5,Tablet
+Novamox,amoxicillin,Amoxicillin 250mg,0.6,Capsule
+Mox,amoxicillin,Amoxicillin 500mg,0.8,Capsule
+Limox,amoxicillin,Amoxicillin 500mg,1.0,Capsule
+Amoxil,amoxicillin,Amoxicillin 500mg,1.5,Capsule
+Storvas,atorvastatin,Atorvastatin 10mg,0.9,Tablet
+Atorva,atorvastatin,Atorvastatin 10mg,1.2,Tablet
+Lipitor,atorvastatin,Atorvastatin 10mg,3.0,Tablet
+Cifran,ciprofloxacin,Ciprofloxacin 500mg,1.0,Tablet
+Ciplox,ciprofloxacin,Ciprofloxacin 500mg,1.2,Tablet
+Cipro,ciprofloxacin,Ciprofloxacin 500mg,1.5,Tablet
+Montek,montelukast,Montelukast 10mg,1.1,Tablet
+Singulair,montelukast,Montelukast 10mg,3.2,Tablet
+Montair,montelukast,Montelukast 10mg,1.3,Tablet
+Pantop,pantoprazole,Pantoprazole 40mg,0.9,Tablet
+Pan,pantoprazole,Pantoprazole 40mg,1.0,Tablet
+Pantodac,pantoprazole,Pantoprazole 40mg,1.2,Tablet
+Controloc,pantoprazole,Pantoprazole 40mg,2.5,Tablet
+Clavam,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,2.5,Tablet
+Augmentin,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,3.5,Tablet
+Moxclav,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,2.8,Tablet
+Telma,telmisartan,Telmisartan 40mg,1.0,Tablet
+Telsartan,telmisartan,Telmisartan 40mg,0.8,Tablet
+Micardis,telmisartan,Telmisartan 40mg,2.8,Tablet
+Amlodac,amlodipine,Amlodipine 5mg,0.7,Tablet
+Amlong,amlodipine,Amlodipine 5mg,0.9,Tablet
+Norvasc,amlodipine,Amlodipine 5mg,2.5,Tablet
+Rozucor,rosuvastatin,Rosuvastatin 10mg,1.1,Tablet
+Rosuvas,rosuvastatin,Rosuvastatin 10mg,1.3,Tablet
+Crestor,rosuvastatin,Rosuvastatin 10mg,3.0,Tablet
+Brozeet,levocetirizine,Levocetirizine 5mg,0.6,Tablet
+Xyzal,levocetirizine,Levocetirizine 5mg,2.0,Tablet
+Levocet,levocetirizine,Levocetirizine 5mg,0.8,Tablet

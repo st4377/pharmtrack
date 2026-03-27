@@ -5,22 +5,21 @@ const router  = express.Router();
 
 const CSV_PATH = path.join(__dirname, 'dataset', 'alternative_medicine.csv');
 
+// ── CLEAN CSV PARSER ──
+// Handles Windows \r\n line endings, trims all whitespace
 function parseCSV(filePath) {
-  const lines = fs.readFileSync(filePath, 'utf8').trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim());
-  return lines.slice(1).map(line => {
-    // Split by comma but only 5 parts (chemical_composition may contain commas)
-    const parts = line.split(',');
-    const obj = {};
-    // brand, name, chemical_composition (may be multi-word), price, form
-    obj['brand'] = (parts[0] || '').trim();
-    obj['name']  = (parts[1] || '').trim();
-    // chemical_composition is everything between index 2 and last 2
-    obj['chemical_composition'] = parts.slice(2, parts.length - 2).join(',').trim();
-    obj['price'] = (parts[parts.length - 2] || '').trim();
-    obj['form']  = (parts[parts.length - 1] || '').trim();
-    return obj;
-  });
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const lines = raw.replace(/\r/g, '').trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+
+  return lines.slice(1)
+    .filter(line => line.trim())           // skip blank lines
+    .map(line => {
+      const parts = line.split(',').map(p => p.trim());
+      const obj = {};
+      headers.forEach((h, i) => { obj[h] = parts[i] || ''; });
+      return obj;
+    });
 }
 
 let altData = [];
@@ -31,16 +30,41 @@ try {
   console.error('❌ Could not load alternative_medicine.csv:', err.message);
 }
 
-// GET /api/alternatives?med=aspirin
+// ── SMART SEARCH LOGIC ──
+// Step 1: Find all rows that directly match brand, name, or chemical composition
+// Step 2: Extract the chemical compositions from those matches
+// Step 3: Return ALL medicines that share the same chemical composition (alternatives)
+// This way searching "crocin" also returns "paracetamol", "calpol", "dolo" etc.
+
 router.get('/alternatives', (req, res) => {
   const query = (req.query.med || '').trim().toLowerCase();
   if (!query) return res.json({ results: [] });
 
-  const results = altData.filter(row =>
+  // Step 1: Find direct matches
+  const directMatches = altData.filter(row =>
     row.brand.toLowerCase().includes(query) ||
     row.name.toLowerCase().includes(query) ||
     row.chemical_composition.toLowerCase().includes(query)
-  ).sort((a, b) => parseFloat(a.price) - parseFloat(b.price)); // sort by price ascending
+  );
+
+  if (directMatches.length === 0) {
+    return res.json({ results: [] });
+  }
+
+  // Step 2: Collect unique chemical compositions from direct matches
+  // Use the base active ingredient (first word of chemical_composition)
+  // e.g. "Paracetamol 500mg" → "paracetamol"
+  const chemKeywords = new Set();
+  directMatches.forEach(row => {
+    const baseIngredient = row.chemical_composition.toLowerCase().split(' ')[0];
+    if (baseIngredient) chemKeywords.add(baseIngredient);
+  });
+
+  // Step 3: Return ALL rows that share the same active ingredient
+  const results = altData.filter(row => {
+    const baseIngredient = row.chemical_composition.toLowerCase().split(' ')[0];
+    return chemKeywords.has(baseIngredient);
+  }).sort((a, b) => parseFloat(a.price) - parseFloat(b.price)); // cheapest first
 
   res.json({ results });
 });
