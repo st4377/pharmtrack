@@ -189,7 +189,19 @@ app.get('/api/me', (req, res) => {
 // ── API ROUTES ── (add this before app.listen)
 const apiRoutes = require('./server_api_route');
 app.use('/api', apiRoutes);
+// ── PROXY: /api/cosine-alternatives → Flask :5000 ──
+// Add this block AFTER your existing app.use('/api', apiRoutes); line
+// Install first:  npm install http-proxy-middleware
 
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+app.use(
+  '/api/cosine-alternatives',
+  createProxyMiddleware({
+    target: 'http://localhost:5000',
+    changeOrigin: true,
+  })
+);
 // ── MULTER (prescription uploads) ──
 const multer = require('multer');
 const upload = multer({

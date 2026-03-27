@@ -101,6 +101,158 @@
   .status-next { background: rgba(2,195,154,0.15); color: var(--mint); }
   .status-miss { background: rgba(244,67,54,0.15); color: #ef9a9a; }
 
+  /* ── COSINE SIMILARITY SEARCH ── */
+  .cosine-section {
+    margin-top: 4rem;
+    background: linear-gradient(135deg, rgba(2,128,144,0.10), rgba(2,195,154,0.04));
+    border: 1px solid rgba(2,195,154,0.18);
+    border-radius: 24px;
+    padding: 3rem;
+  }
+  .cosine-section .section-label { margin-bottom: 0.5rem; }
+  .cosine-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .cosine-section > p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    max-width: 600px;
+    margin-bottom: 2rem;
+  }
+  .cosine-input-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .cosine-input-row input {
+    flex: 1;
+    min-width: 200px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(2,195,154,0.25);
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .cosine-input-row input::placeholder { color: rgba(255,255,255,0.25); }
+  .cosine-input-row input:focus {
+    border-color: var(--mint);
+    box-shadow: 0 0 0 3px rgba(2,195,154,0.12);
+  }
+  .cosine-input-row button {
+    background: var(--mint);
+    color: var(--dark);
+    border: none;
+    border-radius: 12px;
+    padding: 0.85rem 2rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .cosine-input-row button:hover { opacity: 0.88; transform: translateY(-1px); }
+  .cosine-input-row button:active { transform: translateY(0); }
+  .cosine-input-row button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+  /* Results table */
+  #cosine-results { overflow-x: auto; }
+  #cosine-results table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  #cosine-results th {
+    color: var(--mint);
+    font-size: 0.7rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 0.65rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(2,195,154,0.18);
+    white-space: nowrap;
+  }
+  #cosine-results td {
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8);
+    vertical-align: middle;
+  }
+  #cosine-results tr:last-child td { border-bottom: none; }
+  #cosine-results tr:hover td { background: rgba(2,195,154,0.04); }
+
+  .badge-form {
+    background: rgba(2,195,154,0.12);
+    color: var(--mint);
+    padding: 0.2rem 0.65rem;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* Similarity bar */
+  .sim-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 90px;
+  }
+  .sim-bar-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .sim-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--teal), var(--mint));
+    transition: width 0.4s ease;
+  }
+  .sim-score {
+    font-size: 0.72rem;
+    color: var(--mint);
+    font-weight: 700;
+    white-space: nowrap;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .cosine-meta {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.22);
+    margin-top: 1rem;
+    text-align: right;
+  }
+
+  /* Empty / loading states */
+  .cosine-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+  .cosine-state strong { color: rgba(255,255,255,0.7); }
+  .cosine-spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid rgba(2,195,154,0.2);
+    border-top-color: var(--mint);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 0.75rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   .page-nav { display: flex; justify-content: space-between; padding: 2rem 4rem; border-top: 1px solid rgba(255,255,255,0.07); }
   .page-nav a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
   .page-nav a:hover { color: var(--mint); }
@@ -118,9 +270,12 @@
     .page-hero { padding: 8rem 2rem 3rem; }
     .page-nav { padding: 2rem; }
     .module-bar { display: none; }
+    .cosine-section { padding: 2rem; }
   }
   @media (max-width: 640px) {
     .top-grid { grid-template-columns: 1fr; }
+    .cosine-input-row { flex-direction: column; }
+    .cosine-input-row button { width: 100%; }
   }
 </style>
 </head>
@@ -132,11 +287,8 @@
     <li><a href="features.html">Features</a></li>
     <li><a href="safety.html">Safety</a></li>
     <li><a href="accessibility.html">Accessibility</a></li>
-     
-   </ul>
+  </ul>
 </nav>
-
-
 
 <section class="page-hero">
   <div class="page-hero-content">
@@ -164,7 +316,7 @@
       <p>Provides drug-specific guidance for every medication. Example: Ibuprofen — warns against empty stomach consumption, advises caution for kidney conditions. Covers food interactions and activities to avoid.</p>
     </div>
     <div class="access-card reveal">
-      <div class="access-img-wrap"><img src="C:\Users\SAUMIL\Desktop\pharmatrack\images\capsule-warning.png" alt="QR code on medicine" class="access-img"></div>
+      <div class="access-img-wrap"><img src="../images/capsule-warning.png" alt="Safe combination guidance" class="access-img"></div>
       <h3>Safe Combination Guidance</h3>
       <p>Warns about unsafe drug-drug interactions in real time. Example: Advises against Iron + Calcium supplements together; recommends timed separation to prevent adverse reactions from polypharmacy.</p>
     </div>
@@ -222,6 +374,36 @@
       </div>
     </div>
   </div>
+
+  <!-- ══ COSINE SIMILARITY MEDICINE FINDER ══ -->
+  <div class="cosine-section reveal">
+    <div class="section-label">AI-Powered</div>
+    <h3>Smart Alternative Medicine Finder</h3>
+    <p>
+      Uses cosine similarity to match medicines by chemical composition, name, and form.
+      Finds the closest alternatives even for partial names or spelling variants —
+      ranked by similarity score, then price.
+    </p>
+
+    <div class="cosine-input-row">
+      <input
+        type="text"
+        id="cosine-input"
+        placeholder="e.g. Paracetamol, Dolo 650, Ibuprofen, Metformin…"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button id="cosine-btn" onclick="runCosineSearch()">🔍 Find Alternatives</button>
+    </div>
+
+    <div id="cosine-results">
+      <div class="cosine-state" style="color:rgba(255,255,255,0.15);">
+        Enter a medicine name above to discover similar alternatives.
+      </div>
+    </div>
+  </div>
+  <!-- ══ END COSINE SECTION ══ -->
+
 </section>
 
 <div class="page-nav">
@@ -235,6 +417,109 @@
 </footer>
 
 <script src="../js/main.js"></script>
+
+<!-- ══ COSINE SIMILARITY SEARCH LOGIC ══ -->
+<script>
+  async function runCosineSearch() {
+    const input = document.getElementById('cosine-input');
+    const btn   = document.getElementById('cosine-btn');
+    const area  = document.getElementById('cosine-results');
+    const med   = input.value.trim();
+
+    if (!med) { input.focus(); return; }
+
+    // Loading state
+    btn.disabled = true;
+    btn.textContent = 'Searching…';
+    area.innerHTML = `
+      <div class="cosine-state">
+        <div class="cosine-spinner"></div><br>
+        Finding similar medicines for <strong>${escHtml(med)}</strong>…
+      </div>`;
+
+    try {
+      const res  = await fetch(`/api/cosine-alternatives?med=${encodeURIComponent(med)}`);
+      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      const data = await res.json();
+      const results = data.results || [];
+
+      if (results.length === 0) {
+        area.innerHTML = `
+          <div class="cosine-state">
+            ⚠️ No matches found for <strong>${escHtml(med)}</strong>.<br>
+            Try a chemical name (e.g. Paracetamol) or a brand name (e.g. Crocin).
+          </div>`;
+        return;
+      }
+
+      const maxScore = results[0].score || 1; // normalise bar widths to top result
+
+      const rows = results.map(r => {
+        const pct    = Math.round((r.score / maxScore) * 100);
+        const label  = Math.round(r.score * 100);
+        return `
+          <tr>
+            <td>${escHtml(r.brand || '—')}</td>
+            <td>${escHtml(r.name  || '—')}</td>
+            <td>${escHtml(r.chemical_composition || '—')}</td>
+            <td>₹${parseFloat(r.price || 0).toFixed(2)}</td>
+            <td><span class="badge-form">${escHtml(r.form || '—')}</span></td>
+            <td>
+              <div class="sim-bar-wrap">
+                <div class="sim-bar-track">
+                  <div class="sim-bar-fill" style="width:${pct}%"></div>
+                </div>
+                <span class="sim-score">${label}%</span>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+
+      area.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Name</th>
+              <th>Composition</th>
+              <th>Price</th>
+              <th>Form</th>
+              <th>Similarity</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p class="cosine-meta">
+          ${results.length} alternative${results.length !== 1 ? 's' : ''} found
+          · ranked by cosine similarity · sorted by price on tie
+        </p>`;
+
+    } catch (err) {
+      area.innerHTML = `
+        <div class="cosine-state">
+          ❌ Could not fetch alternatives. Make sure the server is running.<br>
+          <small style="color:rgba(255,255,255,0.2)">${escHtml(err.message)}</small>
+        </div>`;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '🔍 Find Alternatives';
+    }
+  }
+
+  // Allow Enter key to trigger search
+  document.getElementById('cosine-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') runCosineSearch();
+  });
+
+  // XSS-safe HTML escape
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
 
 </body>
 </html>

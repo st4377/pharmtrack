@@ -7,7 +7,7 @@
     area.innerHTML = `<div class="loader"><div class="spinner"></div>Finding alternatives for <strong style="color:#fff;">${med}</strong>…</div>`;
 
     try {
-      const response = await fetch(`/api/alternatives?med=${encodeURIComponent(med)}`);
+      const response = await fetch(`/api/cosine-alternatives?med=${encodeURIComponent(med)}`);
       const data = await response.json();
       const results = data.results;
 
