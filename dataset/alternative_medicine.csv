@@ -1,0 +1,18 @@
+brand,name,chemical_composition,price,form
+Generic Pain Co,pain relief,Acetylsalicylic Acid 81mg,1.8,Tablet
+Bayer,aspirin,Acetylsalicylic Acid 81mg,1.0,Tablet
+Bufferin,aspirin,Acetylsalicylic Acid 81mg,1.2,Tablet
+Ecotrin,aspirin,Acetylsalicylic Acid 81mg,1.5,Tablet
+Anacin,aspirin,Acetylsalicylic Acid 500mg,2.1,Tablet
+Generic Pharma,paracetamol,Paracetamol 500mg,0.5,Tablet
+Crocin,paracetamol,Paracetamol 500mg,1.2,Tablet
+Dolo,paracetamol,Paracetamol 650mg,1.5,Tablet
+Calpol,paracetamol,Paracetamol 500mg,1.3,Tablet
+Brufen,ibuprofen,Ibuprofen 400mg,1.4,Tablet
+Advil,ibuprofen,Ibuprofen 200mg,2.2,Tablet
+Omez,omeprazole,Omeprazole 20mg,1.2,Capsule
+Zyrtec,cetirizine,Cetirizine 10mg,1.5,Tablet
+Cetzine,cetirizine,Cetirizine 10mg,0.7,Tablet
+Azee,azithromycin,Azithromycin 500mg,2.0,Tablet
+Glucophage,metformin,Metformin 500mg,1.8,Tablet
+Glycomet,metformin,Metformin 500mg,0.9,Tablet

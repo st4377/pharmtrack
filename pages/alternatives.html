@@ -232,7 +232,6 @@
   <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
   <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Networking and Communications</p>
 </footer>
-
 <script src="../js/main.js"></script>
 <script>
   const input = document.getElementById('medInput');
@@ -256,34 +255,31 @@
 
       if (!Array.isArray(results) || results.length === 0) throw new Error('No results');
 
-      // Show all alternatives for each match
-      const rows = results.map((r, i) => {
-        const meds = r.medications ? r.medications.join(', ') : '—';
-        const syms = r.symptoms ? r.symptoms.join(', ') : '—';
-        return `
-          <tr>
-            <td>${r.disease || '—'}</td>
-            <td>${meds}</td>
-            <td>${r.description || '—'}</td>
-            <td>${syms}</td>
-          </tr>
-        `;
-      }).join('');
+      const rows = results.map(r => `
+        <tr>
+          <td>${r.brand || '—'}</td>
+          <td>${r.name || '—'}</td>
+          <td>${r.chemical_composition || '—'}</td>
+          <td class="price-tag">$${parseFloat(r.price || 0).toFixed(2)}</td>
+          <td><span class="badge-form">${r.form || '—'}</span></td>
+        </tr>
+      `).join('');
 
       area.innerHTML = `
         <div class="results-wrap">
           <table class="results-table">
             <thead>
               <tr>
-                <th>Disease/Condition</th>
-                <th>Alternative Medicines</th>
-                <th>Description</th>
-                <th>Symptoms</th>
+                <th>Brand</th>
+                <th>Name</th>
+                <th>Chemical Composition</th>
+                <th>Price</th>
+                <th>Form</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
           </table>
-          <p class="result-meta">Results are based on your real dataset. Consult your doctor before switching medicines.</p>
+          <p class="result-meta">${results.length} alternatives found · sorted by price · consult your doctor before switching.</p>
         </div>
       `;
 
