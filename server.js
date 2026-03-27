@@ -186,9 +186,11 @@ app.get('/api/me', (req, res) => {
     ? { loggedIn: true,  user: req.user }
     : { loggedIn: false });
 });
-
+// ── API ROUTES ── (add this before app.listen)
+const apiRoutes = require('./server_api_route');
+app.use('/api', apiRoutes);
 // ── START ──
 app.listen(3000, () => {
   console.log(' PharmaTrack running on http://localhost:3000');
-  console.log('📁 Users file will be saved to:', USERS_FILE);
+  console.log(' Users file will be saved to:', USERS_FILE);
 });
