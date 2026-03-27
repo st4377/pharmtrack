@@ -250,63 +250,40 @@
     area.innerHTML = `<div class="loader"><div class="spinner"></div>Finding alternatives for <strong style="color:#fff;">${med}</strong>…</div>`;
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: `You are a pharmacology expert. Given the medicine "${med}", list 4–6 cheaper alternative medicines.
-Return ONLY a JSON array, no markdown, no preamble. Each object must have:
-- "brand": brand name
-- "name": generic/common name
-- "composition": active chemical composition with dosage (e.g. "Acetylsalicylic Acid 81 mg")
-- "price": estimated relative price as a number (use 1.0 as baseline for the cheapest option, scale others proportionally up to ~3.0)
-- "form": dosage form (Tablet, Capsule, Syrup, Injection, etc.)
-
-Example format:
-[{"brand":"Generic Pan Co","name":"pain relief","composition":"Acetylsalicylic Acid 81 mg","price":1.8,"form":"Tablet"}]`
-          }]
-        })
-      });
-
+      const response = await fetch(`/api/alternatives?med=${encodeURIComponent(med)}`);
       const data = await response.json();
-      const text = data.content.map(b => b.text || '').join('');
-      const clean = text.replace(/```json|```/g, '').trim();
-      const results = JSON.parse(clean);
+      const results = data.results;
 
       if (!Array.isArray(results) || results.length === 0) throw new Error('No results');
 
-      // Sort by price
-      results.sort((a, b) => a.price - b.price);
-
-      const rows = results.map((r, i) => `
-        <tr>
-          <td>${r.brand || '—'}</td>
-          <td>${r.name || '—'}</td>
-          <td>${r.composition || '—'}</td>
-          <td><span class="price-tag">${Number(r.price).toFixed(1)}</span></td>
-          <td><span class="badge-form">${r.form || '—'}</span></td>
-        </tr>
-      `).join('');
+      // Show all alternatives for each match
+      const rows = results.map((r, i) => {
+        const meds = r.medications ? r.medications.join(', ') : '—';
+        const syms = r.symptoms ? r.symptoms.join(', ') : '—';
+        return `
+          <tr>
+            <td>${r.disease || '—'}</td>
+            <td>${meds}</td>
+            <td>${r.description || '—'}</td>
+            <td>${syms}</td>
+          </tr>
+        `;
+      }).join('');
 
       area.innerHTML = `
         <div class="results-wrap">
           <table class="results-table">
             <thead>
               <tr>
-                <th>Brand</th>
-                <th>Name</th>
-                <th>Chemical Composition</th>
-                <th>Price</th>
-                <th>Form</th>
+                <th>Disease/Condition</th>
+                <th>Alternative Medicines</th>
+                <th>Description</th>
+                <th>Symptoms</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
           </table>
-          <p class="result-meta">Price is a relative index (1.0 = cheapest). Consult your pharmacist before switching medicines.</p>
+          <p class="result-meta">Results are based on your real dataset. Consult your doctor before switching medicines.</p>
         </div>
       `;
 

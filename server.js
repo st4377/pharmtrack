@@ -189,6 +189,6 @@ app.get('/api/me', (req, res) => {
 
 // ── START ──
 app.listen(3000, () => {
-  console.log('✅ PharmaTrack running on http://localhost:3000');
+  console.log(' PharmaTrack running on http://localhost:3000');
   console.log('📁 Users file will be saved to:', USERS_FILE);
 });

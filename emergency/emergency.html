@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PharmTrack — Emergency Mode</title>
+<title>PharmTrack Emergency Mode</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -374,7 +374,40 @@
       badge.innerHTML = '✅ &nbsp;Location confirmed';
     }
  
+    async function useCoords(lat, lng, isFallback) {
+  userLat = lat;
+  userLng = lng;
+
+  const badge = document.getElementById('statusBadge');
+  const heading = document.getElementById('locationText');
+
+  if (isFallback) {
+    badge.className = 'status-line error';
+    badge.textContent = '⚠️  Using approximate location';
+  } else {
+    badge.className = 'status-line';
+    badge.innerHTML = '✅ &nbsp;Location confirmed';
+  }
+
+  try {
+    // Reverse geocoding API
+    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+    const data = await res.json();
+
+    const place =
+      data.address.city ||
+      data.address.town ||
+      data.address.village ||
+      data.address.suburb ||
+      "Unknown location";
+
+    heading.textContent = `📍 Location found: ${place}`;
+    
+  } catch (err) {
+    console.error("Reverse geocoding failed:", err);
     heading.textContent = `📌 Location found (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+  }
+}
   }
  
   /* ─── Maps helpers ─── */
