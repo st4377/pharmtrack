@@ -189,8 +189,20 @@ app.get('/api/me', (req, res) => {
 // ── API ROUTES ── (add this before app.listen)
 const apiRoutes = require('./server_api_route');
 app.use('/api', apiRoutes);
-// ── START ──
-app.listen(3000, () => {
-  console.log(' PharmaTrack running on http://localhost:3000');
-  console.log(' Users file will be saved to:', USERS_FILE);
+
+// ── MULTER (prescription uploads) ──
+const multer = require('multer');
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+    allowed.includes(file.mimetype) ? cb(null, true) : cb(new Error('Invalid file type'));
+  }
+});
+app.locals.upload = upload;
+// ── START SERVER ──
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ PharmaTrack running at http://localhost:${PORT}`);
 });

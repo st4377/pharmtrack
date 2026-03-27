@@ -37,7 +37,7 @@
             </thead>
             <tbody>${rows}</tbody>
           </table>
-          <p class="result-meta">${results.length} alternatives found · sorted by price · consult your doctor before switching.</p>
+          <p class="result-meta">${results.length} alternatives found · sorted by price · </p>
         </div>
       `;
 

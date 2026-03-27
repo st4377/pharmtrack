@@ -153,12 +153,12 @@
       <p>Authenticate medicines — verify batch number, expiry date, and manufacturer in seconds with a simple scan of the QR code.</p>
       <span class="feat-tag">Anti-Counterfeit</span>
     </div>
-    <div class="feat-card-lg reveal">
-      <span class="feat-icon-lg">⏰</span>
-      <h3>Dose Reminders</h3>
-      <p>Personalized cycles with intelligent scheduling alerts — automated reminders prevent missed or repeated doses throughout the day.</p>
-      <span class="feat-tag">Adherence</span>
-    </div>
+   <div class="feat-card-lg reveal" id="uploadCard" style="cursor:pointer;" onclick="openUploadModal()">
+  <span class="feat-icon-lg">☁️</span>
+  <h3>Upload Prescription</h3>
+  <p>Store your prescriptions securely on the cloud — access them anytime, share with doctors, and never lose a medical record again.</p>
+  <span class="feat-tag">Cloud Storage</span>
+</div>
     <div class="feat-card-lg reveal">
       <span class="feat-icon-lg">🚨</span>
       <h3>Emergency Mode</h3>
@@ -192,10 +192,100 @@
 <footer>
   <a href="../index.html" class="logo">Pharm<span>Track</span></a>
   <p>A Smart, Accessible Healthcare Awareness & Assistance System</p>
-  <p style="margin-top:0.5rem;">Developed as a <strong>B.Tech Minor Project</strong> · Department of Networking and Communications</p>
+  <p style="margin-top:0.5rem;">  <strong> </strong>  </p>
 </footer>
 
 <script src="../js/main.js"></script>
+<!-- PRESCRIPTION UPLOAD MODAL -->
+<div id="uploadModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:#0F2A3D; border:1px solid rgba(2,195,154,0.25); border-radius:20px; padding:2.5rem; width:min(480px,90vw); position:relative;">
+    
+    <button onclick="closeUploadModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.4rem;cursor:pointer;">✕</button>
+    
+    <h3 style="font-family:'DM Serif Display',serif; font-size:1.4rem; margin-bottom:0.3rem;">Upload Prescription</h3>
+    <p style="color:rgba(255,255,255,0.45); font-size:0.85rem; margin-bottom:1.5rem;">PDF or image (JPG/PNG) · Max 5MB · Saved securely to cloud</p>
 
+    <div id="dropZone" style="border:2px dashed rgba(2,195,154,0.3); border-radius:14px; padding:2rem; text-align:center; cursor:pointer; transition:border-color 0.2s; margin-bottom:1rem;"
+      onclick="document.getElementById('presFile').click()"
+      ondragover="event.preventDefault(); this.style.borderColor='#02C39A'"
+      ondragleave="this.style.borderColor='rgba(2,195,154,0.3)'"
+      ondrop="handleDrop(event)">
+      <div style="font-size:2.5rem; margin-bottom:0.5rem;">📋</div>
+      <div style="color:rgba(255,255,255,0.6); font-size:0.88rem;">Drag & drop or <span style="color:#02C39A; text-decoration:underline;">browse files</span></div>
+      <div id="fileLabel" style="margin-top:0.8rem; font-size:0.8rem; color:#02C39A;"></div>
+    </div>
+
+    <input type="file" id="presFile" accept=".jpg,.jpeg,.png,.pdf" style="display:none" onchange="onFileSelect(this)">
+
+    <input type="text" id="presNotes" placeholder="Notes (optional — e.g. Dr. Sharma, 2025)" 
+      style="width:100%; padding:0.7rem 1rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:white; font-size:0.85rem; margin-bottom:1rem; box-sizing:border-box;">
+
+    <button onclick="submitPrescription()"
+      style="width:100%; padding:0.85rem; background:linear-gradient(135deg,#02C39A,#0A7EA4); border:none; border-radius:12px; color:white; font-weight:600; font-size:0.95rem; cursor:pointer;">
+      ☁️ Save to Cloud
+    </button>
+
+    <div id="uploadStatus" style="margin-top:1rem; font-size:0.83rem; text-align:center;"></div>
+  </div>
+</div>
+
+<script>
+  function openUploadModal() {
+    document.getElementById('uploadModal').style.display = 'flex';
+  }
+  function closeUploadModal() {
+    document.getElementById('uploadModal').style.display = 'none';
+    document.getElementById('uploadStatus').textContent = '';
+    document.getElementById('fileLabel').textContent = '';
+    document.getElementById('presFile').value = '';
+    document.getElementById('presNotes').value = '';
+  }
+  function onFileSelect(input) {
+    if (input.files[0]) {
+      document.getElementById('fileLabel').textContent = '✅ ' + input.files[0].name;
+    }
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('dropZone').style.borderColor = 'rgba(2,195,154,0.3)';
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      document.getElementById('presFile').files = e.dataTransfer.files;
+      document.getElementById('fileLabel').textContent = '✅ ' + file.name;
+    }
+  }
+  async function submitPrescription() {
+    const file = document.getElementById('presFile').files[0];
+    const notes = document.getElementById('presNotes').value;
+    const status = document.getElementById('uploadStatus');
+
+    if (!file) { status.innerHTML = '<span style="color:#ff6b6b">⚠️ Please select a file first</span>'; return; }
+
+    // Get email from URL params (set during login redirect)
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get('email') || localStorage.getItem('userEmail') || 'anonymous';
+
+    const formData = new FormData();
+    formData.append('prescription', file);
+    formData.append('email', email);
+    formData.append('notes', notes);
+
+    status.innerHTML = '<span style="color:#02C39A">⏳ Uploading...</span>';
+
+    try {
+      const res = await fetch('/api/prescription/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.success) {
+        status.innerHTML = `<span style="color:#02C39A">✅ Saved! <em>${data.fileName}</em> uploaded at ${new Date(data.uploadedAt).toLocaleTimeString()}</span>`;
+        setTimeout(closeUploadModal, 2500);
+      } else {
+        status.innerHTML = `<span style="color:#ff6b6b">❌ ${data.error}</span>`;
+      }
+    } catch (e) {
+      status.innerHTML = '<span style="color:#ff6b6b">❌ Network error. Try again.</span>';
+    }
+  }
+</script>
 </body>
 </html>

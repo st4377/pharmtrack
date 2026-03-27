@@ -10,11 +10,18 @@ Crocin,paracetamol,Paracetamol 500mg,1.2,Tablet
 Calpol,paracetamol,Paracetamol 500mg,1.3,Tablet
 Dolo,paracetamol,Paracetamol 650mg,1.5,Tablet
 Tylenol,paracetamol,Paracetamol 500mg,2.0,Tablet
+Calpol Syrup,paracetamol,Paracetamol 125mg/5ml,18.0,Syrup
+Crocin Syrup,paracetamol,Paracetamol 125mg/5ml,20.0,Syrup
+Febrex Syrup,paracetamol,Paracetamol 125mg/5ml,15.0,Syrup
+Metacin Syrup,paracetamol,Paracetamol 125mg/5ml,14.0,Syrup
 Generic Ibu,ibuprofen,Ibuprofen 200mg,0.9,Tablet
 Brufen,ibuprofen,Ibuprofen 400mg,1.4,Tablet
 Combiflam,ibuprofen,Ibuprofen 400mg,1.6,Tablet
 Nurofen,ibuprofen,Ibuprofen 400mg,1.8,Tablet
 Advil,ibuprofen,Ibuprofen 200mg,2.2,Tablet
+Brufen Syrup,ibuprofen,Ibuprofen 100mg/5ml,22.0,Syrup
+Ibugesic Syrup,ibuprofen,Ibuprofen 100mg/5ml,19.0,Syrup
+Emflam Syrup,ibuprofen,Ibuprofen 100mg/5ml,17.0,Syrup
 Ocid,omeprazole,Omeprazole 20mg,1.0,Capsule
 Omez,omeprazole,Omeprazole 20mg,1.2,Capsule
 Omepral,omeprazole,Omeprazole 20mg,1.4,Capsule
@@ -23,6 +30,9 @@ Cetzine,cetirizine,Cetirizine 10mg,0.7,Tablet
 Alerid,cetirizine,Cetirizine 10mg,0.8,Tablet
 Allercet,cetirizine,Cetirizine 10mg,0.9,Tablet
 Zyrtec,cetirizine,Cetirizine 10mg,1.5,Tablet
+Cetzine Syrup,cetirizine,Cetirizine 5mg/5ml,28.0,Syrup
+Alerid Syrup,cetirizine,Cetirizine 5mg/5ml,30.0,Syrup
+Zyrtec Syrup,cetirizine,Cetirizine 5mg/5ml,35.0,Syrup
 Glycomet,metformin,Metformin 500mg,0.9,Tablet
 Metlong,metformin,Metformin 500mg,1.1,Tablet
 Glucophage,metformin,Metformin 500mg,1.8,Tablet
@@ -30,26 +40,40 @@ Fortamet,metformin,Metformin 1000mg,2.2,Tablet
 Azithral,azithromycin,Azithromycin 500mg,1.8,Tablet
 Azee,azithromycin,Azithromycin 500mg,2.0,Tablet
 Zithromax,azithromycin,Azithromycin 500mg,3.5,Tablet
+Azithral Syrup,azithromycin,Azithromycin 200mg/5ml,65.0,Syrup
+Azee Syrup,azithromycin,Azithromycin 200mg/5ml,70.0,Syrup
+Zithrocin Syrup,azithromycin,Azithromycin 200mg/5ml,75.0,Syrup
 Novamox,amoxicillin,Amoxicillin 250mg,0.6,Capsule
 Mox,amoxicillin,Amoxicillin 500mg,0.8,Capsule
 Limox,amoxicillin,Amoxicillin 500mg,1.0,Capsule
 Amoxil,amoxicillin,Amoxicillin 500mg,1.5,Capsule
+Mox Syrup,amoxicillin,Amoxicillin 125mg/5ml,35.0,Syrup
+Novamox Syrup,amoxicillin,Amoxicillin 125mg/5ml,38.0,Syrup
+Amoxil Syrup,amoxicillin,Amoxicillin 125mg/5ml,42.0,Syrup
 Storvas,atorvastatin,Atorvastatin 10mg,0.9,Tablet
 Atorva,atorvastatin,Atorvastatin 10mg,1.2,Tablet
 Lipitor,atorvastatin,Atorvastatin 10mg,3.0,Tablet
 Cifran,ciprofloxacin,Ciprofloxacin 500mg,1.0,Tablet
 Ciplox,ciprofloxacin,Ciprofloxacin 500mg,1.2,Tablet
 Cipro,ciprofloxacin,Ciprofloxacin 500mg,1.5,Tablet
+Cipro Syrup,ciprofloxacin,Ciprofloxacin 250mg/5ml,55.0,Syrup
+Ciplox Syrup,ciprofloxacin,Ciprofloxacin 250mg/5ml,58.0,Syrup
 Montek,montelukast,Montelukast 10mg,1.1,Tablet
 Singulair,montelukast,Montelukast 10mg,3.2,Tablet
 Montair,montelukast,Montelukast 10mg,1.3,Tablet
+Montek LC,montelukast,Montelukast 5mg,0.9,Tablet
+Montek Syrup,montelukast,Montelukast 4mg/5ml,55.0,Syrup
+Montair Syrup,montelukast,Montelukast 4mg/5ml,60.0,Syrup
 Pantop,pantoprazole,Pantoprazole 40mg,0.9,Tablet
 Pan,pantoprazole,Pantoprazole 40mg,1.0,Tablet
 Pantodac,pantoprazole,Pantoprazole 40mg,1.2,Tablet
+Pantocid,pantoprazole,Pantoprazole 40mg,1.1,Tablet
 Controloc,pantoprazole,Pantoprazole 40mg,2.5,Tablet
 Clavam,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,2.5,Tablet
 Augmentin,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,3.5,Tablet
 Moxclav,amoxicillin clavulanate,Amoxicillin 500mg Clavulanate 125mg,2.8,Tablet
+Augmentin Syrup,amoxicillin clavulanate,Amoxicillin 200mg Clavulanate 28.5mg/5ml,75.0,Syrup
+Clavam Syrup,amoxicillin clavulanate,Amoxicillin 200mg Clavulanate 28.5mg/5ml,68.0,Syrup
 Telma,telmisartan,Telmisartan 40mg,1.0,Tablet
 Telsartan,telmisartan,Telmisartan 40mg,0.8,Tablet
 Micardis,telmisartan,Telmisartan 40mg,2.8,Tablet
@@ -62,3 +86,161 @@ Crestor,rosuvastatin,Rosuvastatin 10mg,3.0,Tablet
 Brozeet,levocetirizine,Levocetirizine 5mg,0.6,Tablet
 Xyzal,levocetirizine,Levocetirizine 5mg,2.0,Tablet
 Levocet,levocetirizine,Levocetirizine 5mg,0.8,Tablet
+Levocet Syrup,levocetirizine,Levocetirizine 2.5mg/5ml,25.0,Syrup
+Xyzal Syrup,levocetirizine,Levocetirizine 2.5mg/5ml,32.0,Syrup
+Teczine Syrup,levocetirizine,Levocetirizine 2.5mg/5ml,22.0,Syrup
+Benadryl,diphenhydramine,Diphenhydramine 25mg,1.2,Tablet
+Benadryl Syrup,diphenhydramine,Diphenhydramine 12.5mg/5ml,45.0,Syrup
+Dimedrol Syrup,diphenhydramine,Diphenhydramine 12.5mg/5ml,38.0,Syrup
+Phenergan,promethazine,Promethazine 25mg,1.0,Tablet
+Avomine,promethazine,Promethazine 25mg,0.9,Tablet
+Phenergan Syrup,promethazine,Promethazine 5mg/5ml,40.0,Syrup
+Wysolone,prednisolone,Prednisolone 5mg,0.6,Tablet
+Omnacortil,prednisolone,Prednisolone 5mg,0.8,Tablet
+Omnacortil Syrup,prednisolone,Prednisolone 5mg/5ml,55.0,Syrup
+Wysolone Syrup,prednisolone,Prednisolone 5mg/5ml,50.0,Syrup
+Dexamethasone,dexamethasone,Dexamethasone 0.5mg,0.5,Tablet
+Decadron,dexamethasone,Dexamethasone 0.5mg,0.8,Tablet
+Metrogyl,metronidazole,Metronidazole 400mg,0.7,Tablet
+Flagyl,metronidazole,Metronidazole 400mg,0.9,Tablet
+Metro,metronidazole,Metronidazole 200mg,0.5,Tablet
+Metrogyl Syrup,metronidazole,Metronidazole 200mg/5ml,30.0,Syrup
+Flagyl Syrup,metronidazole,Metronidazole 200mg/5ml,35.0,Syrup
+Norflox,norfloxacin,Norfloxacin 400mg,1.1,Tablet
+Norbactin,norfloxacin,Norfloxacin 400mg,0.9,Tablet
+Oflox,ofloxacin,Ofloxacin 200mg,1.0,Tablet
+Zanocin,ofloxacin,Ofloxacin 200mg,1.2,Tablet
+Tarivid,ofloxacin,Ofloxacin 400mg,2.0,Tablet
+Levoflox,levofloxacin,Levofloxacin 500mg,1.5,Tablet
+Levoquin,levofloxacin,Levofloxacin 500mg,1.3,Tablet
+Tavanic,levofloxacin,Levofloxacin 500mg,2.8,Tablet
+Doxt,doxycycline,Doxycycline 100mg,1.2,Capsule
+Biodoxi,doxycycline,Doxycycline 100mg,0.9,Capsule
+Doxycap,doxycycline,Doxycycline 100mg,1.0,Capsule
+Tetracycline,tetracycline,Tetracycline 250mg,0.7,Capsule
+Resteclin,tetracycline,Tetracycline 250mg,0.9,Capsule
+Sporanox,itraconazole,Itraconazole 100mg,5.0,Capsule
+Canditral,itraconazole,Itraconazole 100mg,4.0,Capsule
+Itaspor,itraconazole,Itraconazole 100mg,3.5,Capsule
+Fluconazole,fluconazole,Fluconazole 150mg,2.0,Tablet
+Forcan,fluconazole,Fluconazole 150mg,1.8,Tablet
+Syscan,fluconazole,Fluconazole 150mg,1.5,Tablet
+Acyclovir,acyclovir,Acyclovir 400mg,1.5,Tablet
+Zovirax,acyclovir,Acyclovir 400mg,3.5,Tablet
+Ocuvir,acyclovir,Acyclovir 400mg,2.0,Tablet
+Acivir,acyclovir,Acyclovir 200mg,1.2,Tablet
+Rantac,ranitidine,Ranitidine 150mg,0.7,Tablet
+Zinetac,ranitidine,Ranitidine 150mg,0.8,Tablet
+Aciloc,ranitidine,Ranitidine 150mg,0.6,Tablet
+Rantac Syrup,ranitidine,Ranitidine 75mg/5ml,28.0,Syrup
+Aciloc Syrup,ranitidine,Ranitidine 75mg/5ml,25.0,Syrup
+Nexpro,esomeprazole,Esomeprazole 40mg,1.5,Capsule
+Nexium,esomeprazole,Esomeprazole 40mg,3.2,Capsule
+Sompraz,esomeprazole,Esomeprazole 40mg,1.3,Capsule
+Rablet,rabeprazole,Rabeprazole 20mg,1.2,Tablet
+Razo,rabeprazole,Rabeprazole 20mg,1.0,Tablet
+Rabicip,rabeprazole,Rabeprazole 20mg,0.9,Tablet
+Aciphex,rabeprazole,Rabeprazole 20mg,2.8,Tablet
+Digene,antacid,Magnesium Hydroxide 185mg Aluminium Hydroxide 830mg,0.5,Tablet
+Gelusil,antacid,Magnesium Hydroxide 250mg Aluminium Hydroxide 500mg,0.6,Tablet
+Digene Syrup,antacid,Magnesium Hydroxide 185mg Aluminium Hydroxide 830mg/5ml,45.0,Syrup
+Gelusil Syrup,antacid,Magnesium Hydroxide 250mg Aluminium Hydroxide 500mg/5ml,40.0,Syrup
+Mucaine Syrup,antacid,Oxethazaine 10mg Aluminium Hydroxide 291mg/5ml,55.0,Syrup
+Dulcolax,bisacodyl,Bisacodyl 5mg,0.8,Tablet
+Dulcoflex,bisacodyl,Bisacodyl 5mg,0.7,Tablet
+Asthalin,salbutamol,Salbutamol 2mg,0.5,Tablet
+Ventolin,salbutamol,Salbutamol 2mg,0.8,Tablet
+Salbair,salbutamol,Salbutamol 4mg,0.7,Tablet
+Ascoril Syrup,salbutamol,Salbutamol 1mg Bromhexine 4mg Guaifenesin 50mg/5ml,70.0,Syrup
+Grilinctus Syrup,salbutamol,Salbutamol 1mg Bromhexine 4mg/5ml,65.0,Syrup
+Alexol Syrup,ambroxol,Ambroxol 15mg/5ml,40.0,Syrup
+Mucinac Syrup,ambroxol,Ambroxol 15mg/5ml,38.0,Syrup
+Ambrodil Syrup,ambroxol,Ambroxol 15mg/5ml,35.0,Syrup
+Ambroxol,ambroxol,Ambroxol 30mg,0.8,Tablet
+Zedex Syrup,dextromethorphan,Dextromethorphan 10mg/5ml,50.0,Syrup
+Alex Syrup,dextromethorphan,Dextromethorphan 10mg Phenylephrine 5mg/5ml,55.0,Syrup
+Cofsils Syrup,dextromethorphan,Dextromethorphan 10mg/5ml,48.0,Syrup
+Benadryl Cough Syrup,diphenhydramine,Diphenhydramine 14.08mg/5ml,55.0,Syrup
+Honitus Syrup,glycyrrhiza,Glycyrrhiza 50mg Tulsi 50mg/5ml,55.0,Syrup
+ORS,oral rehydration salts,Sodium Chloride 2.6g Glucose 13.5g/L,10.0,Syrup
+Electral,oral rehydration salts,Sodium Chloride 2.6g Potassium Chloride 1.5g/L,12.0,Syrup
+Emetil,domperidone,Domperidone 10mg,0.6,Tablet
+Motilium,domperidone,Domperidone 10mg,0.9,Tablet
+Domstal,domperidone,Domperidone 10mg,0.7,Tablet
+Domstal Syrup,domperidone,Domperidone 5mg/5ml,30.0,Syrup
+Emetil Syrup,domperidone,Domperidone 5mg/5ml,28.0,Syrup
+Perinorm,metoclopramide,Metoclopramide 10mg,0.5,Tablet
+Reglan,metoclopramide,Metoclopramide 10mg,0.8,Tablet
+Ondem,ondansetron,Ondansetron 4mg,1.5,Tablet
+Emeset,ondansetron,Ondansetron 4mg,1.2,Tablet
+Zofran,ondansetron,Ondansetron 4mg,2.5,Tablet
+Ondem Syrup,ondansetron,Ondansetron 2mg/5ml,45.0,Syrup
+Emeset Syrup,ondansetron,Ondansetron 2mg/5ml,40.0,Syrup
+Cyclopam,dicyclomine,Dicyclomine 20mg Paracetamol 500mg,1.2,Tablet
+Meftal Spas,mefenamic acid,Mefenamic Acid 250mg Dicyclomine 10mg,1.5,Tablet
+Meftal,mefenamic acid,Mefenamic Acid 500mg,1.0,Tablet
+Ponstan,mefenamic acid,Mefenamic Acid 500mg,1.8,Tablet
+Voveran,diclofenac,Diclofenac 50mg,1.0,Tablet
+Voltaren,diclofenac,Diclofenac 50mg,2.0,Tablet
+Diclofenac Generic,diclofenac,Diclofenac 50mg,0.8,Tablet
+Naprosyn,naproxen,Naproxen 500mg,1.8,Tablet
+Xenobid,naproxen,Naproxen 250mg,0.9,Tablet
+Naproxen Generic,naproxen,Naproxen 250mg,1.0,Tablet
+Shelcal,calcium,Calcium Carbonate 500mg,1.5,Tablet
+Calcimax,calcium,Calcium Carbonate 500mg Vitamin D3 250IU,1.8,Tablet
+Gemcal,calcium,Calcium Citrate 500mg Vitamin D3 250IU,2.2,Tablet
+Limcee,vitamin c,Ascorbic Acid 500mg,0.5,Tablet
+Celin,vitamin c,Ascorbic Acid 500mg,0.6,Tablet
+Becosules,vitamin b complex,Vitamin B Complex Vitamin C,1.0,Capsule
+Neurobion,vitamin b complex,Vitamin B1 B6 B12,1.2,Tablet
+Polybion Syrup,vitamin b complex,Vitamin B Complex/5ml,45.0,Syrup
+Becosules Syrup,vitamin b complex,Vitamin B Complex Vitamin C/5ml,50.0,Syrup
+Zincovit,zinc,Zinc 10mg Multivitamin,1.5,Tablet
+Zinconia,zinc,Zinc Sulphate 20mg,0.8,Tablet
+Folvite,folic acid,Folic Acid 5mg,0.4,Tablet
+Dexorange Syrup,iron,Ferric Ammonium Citrate 160mg Folic Acid 0.5mg/5ml,60.0,Syrup
+Orofer Syrup,iron,Ferrous Ascorbate 30mg/5ml,65.0,Syrup
+Hemfer Syrup,iron,Ferrous Sulphate 150mg/5ml,55.0,Syrup
+Fersolate,iron,Ferrous Sulphate 200mg,0.5,Tablet
+Autrin,iron,Ferrous Fumarate 100mg,0.7,Tablet
+Losartan Generic,losartan,Losartan 50mg,1.0,Tablet
+Losar,losartan,Losartan 50mg,0.8,Tablet
+Cozaar,losartan,Losartan 50mg,2.5,Tablet
+Aten,atenolol,Atenolol 50mg,0.8,Tablet
+Tenormin,atenolol,Atenolol 50mg,1.5,Tablet
+Atenolol Generic,atenolol,Atenolol 50mg,0.6,Tablet
+Inderal,propranolol,Propranolol 40mg,1.2,Tablet
+Propranolol Generic,propranolol,Propranolol 40mg,0.5,Tablet
+Betaloc,metoprolol,Metoprolol 50mg,1.0,Tablet
+Seloken,metoprolol,Metoprolol 50mg,0.9,Tablet
+Metoprolol Generic,metoprolol,Metoprolol 25mg,0.7,Tablet
+Glucotrol,glipizide,Glipizide 5mg,1.5,Tablet
+Glipizide Generic,glipizide,Glipizide 5mg,0.8,Tablet
+Daonil,glibenclamide,Glibenclamide 5mg,0.6,Tablet
+Glibenclamide Generic,glibenclamide,Glibenclamide 5mg,0.4,Tablet
+Januvia,sitagliptin,Sitagliptin 100mg,22.0,Tablet
+Zitaglip,sitagliptin,Sitagliptin 100mg,10.0,Tablet
+Sitagliptin Generic,sitagliptin,Sitagliptin 100mg,12.0,Tablet
+Thyronorm,levothyroxine,Levothyroxine 50mcg,0.8,Tablet
+Eltroxin,levothyroxine,Levothyroxine 50mcg,0.7,Tablet
+Thyroxine Generic,levothyroxine,Levothyroxine 50mcg,0.6,Tablet
+Alprax,alprazolam,Alprazolam 0.25mg,0.8,Tablet
+Restyl,alprazolam,Alprazolam 0.5mg,1.0,Tablet
+Alprazolam Generic,alprazolam,Alprazolam 0.25mg,0.5,Tablet
+Valium,diazepam,Diazepam 5mg,1.0,Tablet
+Calmpose,diazepam,Diazepam 5mg,0.6,Tablet
+Diazepam Generic,diazepam,Diazepam 5mg,0.4,Tablet
+Tryptomer,amitriptyline,Amitriptyline 10mg,0.7,Tablet
+Amitriptyline Generic,amitriptyline,Amitriptyline 10mg,0.5,Tablet
+Zoloft,sertraline,Sertraline 50mg,5.0,Tablet
+Serta,sertraline,Sertraline 50mg,2.0,Tablet
+Sertraline Generic,sertraline,Sertraline 50mg,2.5,Tablet
+Prozac,fluoxetine,Fluoxetine 20mg,4.0,Tablet
+Fludac,fluoxetine,Fluoxetine 20mg,1.2,Tablet
+Fluoxetine Generic,fluoxetine,Fluoxetine 20mg,1.5,Tablet
+Cremaffin Syrup,liquid paraffin,Liquid Paraffin 1.25ml Milk of Magnesia 3.75ml/5ml,60.0,Syrup
+Nexpro,esomeprazole,Esomeprazole 20mg,1.2,Capsule
+Deriphyllin,theophylline,Theophylline 100mg Etofylline 77mg,1.0,Tablet
+Theophylline Generic,theophylline,Theophylline 200mg,0.8,Tablet
+Corex Syrup,codeine,Codeine 10mg Chlorpheniramine 4mg/5ml,65.0,Syrup
+Phensedyl Syrup,codeine,Codeine 10mg Promethazine 5mg/5ml,60.0,Syrup
