@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "City Hospital",
+    "address": "123 Main St, Metro City",
+    "phone": "+91-12345-67890",
+    "lat": 23.0225,
+    "lng": 72.5714
+  },
+  {
+    "id": 2,
+    "name": "Metro Emergency Clinic",
+    "address": "456 Emergency Rd, Metro City",
+    "phone": "+91-98765-43210",
+    "lat": 23.0300,
+    "lng": 72.5800
+  }
+]

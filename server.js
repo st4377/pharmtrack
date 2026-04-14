@@ -5,8 +5,15 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const path = require('path');
 const fs   = require('fs');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
+
+// ── SUPABASE ──
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 // ── USERS FILE — always relative to this file, not the terminal CWD ──
 const USERS_FILE = path.join(__dirname, 'users.json');
@@ -30,13 +37,12 @@ passport.use(new GoogleStrategy({
   clientID:     process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL:  'http://localhost:3000/auth/google/callback'
-}, (accessToken, refreshToken, profile, done) => {
+}, async (accessToken, refreshToken, profile, done) => {
 
   console.log('=== NEW LOGIN ===');
   console.log('Name:  ', profile.displayName);
   console.log('Email: ', profile.emails[0].value);
   console.log('Time:  ', new Date().toLocaleString());
-  console.log('Saving to:', USERS_FILE);
   console.log('================');
 
   const user = {
@@ -47,6 +53,7 @@ passport.use(new GoogleStrategy({
     loginTime: new Date().toLocaleString()
   };
 
+  // ── 1. SAFE: Always write to users.json first ──
   let users = [];
   if (fs.existsSync(USERS_FILE)) {
     try {
@@ -73,6 +80,43 @@ passport.use(new GoogleStrategy({
     console.log('✅ users.json saved! Total users:', users.length);
   } catch (err) {
     console.error('❌ Failed to write users.json:', err.message);
+  }
+
+  // ── 2. SAFE: Also sync to Supabase (won't crash app if fails) ──
+  try {
+    const { data: existing } = await supabase
+      .from('users')
+      .select('id, login_count')
+      .eq('google_id', profile.id)
+      .single();
+
+    if (existing) {
+      await supabase
+        .from('users')
+        .update({
+          name:        user.name,
+          photo:       user.photo,
+          last_login:  new Date().toISOString(),
+          login_count: (existing.login_count || 1) + 1
+        })
+        .eq('google_id', profile.id);
+      console.log('✅ Supabase user updated');
+    } else {
+      await supabase
+        .from('users')
+        .insert([{
+          name:        user.name,
+          email:       user.email,
+          google_id:   profile.id,
+          photo:       user.photo,
+          login_count: 1,
+          first_login: new Date().toISOString(),
+          last_login:  new Date().toISOString()
+        }]);
+      console.log('✅ Supabase new user inserted');
+    }
+  } catch (err) {
+    console.warn('⚠️ Supabase sync failed (JSON backup still works):', err.message);
   }
 
   return done(null, profile);
@@ -119,12 +163,20 @@ app.post('/auth/email', (req, res) => {
     return res.redirect('/auth.html?error=invalid');
   }
 
-  // Update login time / count
+  // Update login time / count in JSON
   user.lastLogin  = new Date().toLocaleString();
   user.loginCount = (user.loginCount || 1) + 1;
   try {
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch {}
+
+  // Also sync to Supabase safely
+  supabase
+    .from('users')
+    .update({ last_login: new Date().toISOString(), login_count: user.loginCount })
+    .eq('email', email)
+    .then(() => console.log('✅ Supabase email login synced'))
+    .catch(err => console.warn('⚠️ Supabase email sync failed:', err.message));
 
   req.session.user = {
     email:   user.email,
@@ -134,7 +186,6 @@ app.post('/auth/email', (req, res) => {
 
   const name  = encodeURIComponent(user.name  || '');
   const photo = encodeURIComponent(user.photo || '');
-  // ✅ Always redirect to index.html after login
   res.redirect(`/index.html?loggedIn=true&name=${name}&photo=${photo}&email=${encodeURIComponent(user.email)}`);
 });
 
@@ -186,15 +237,20 @@ app.get('/api/me', (req, res) => {
     ? { loggedIn: true,  user: req.user }
     : { loggedIn: false });
 });
-// ── API ROUTES ── (add this before app.listen)
+
+// ── API ROUTES ──
 const apiRoutes = require('./server_api_route');
 app.use('/api', apiRoutes);
+// ── HOSPITALS ROUTE ──
+const hospitalsRoute = require('./routes/hospitals');
+app.use('/api/hospitals', hospitalsRoute);
+
+// ── PRESCRIPTION ROUTE ──
+const prescriptionRoute = require('./routes/prescription');
+app.use('/api/prescription', prescriptionRoute);
+
 // ── PROXY: /api/cosine-alternatives → Flask :5000 ──
-// Add this block AFTER your existing app.use('/api', apiRoutes); line
-// Install first:  npm install http-proxy-middleware
-
 const { createProxyMiddleware } = require('http-proxy-middleware');
-
 app.use(
   '/api/cosine-alternatives',
   createProxyMiddleware({
@@ -202,6 +258,7 @@ app.use(
     changeOrigin: true,
   })
 );
+
 // ── MULTER (prescription uploads) ──
 const multer = require('multer');
 const upload = multer({
@@ -213,6 +270,7 @@ const upload = multer({
   }
 });
 app.locals.upload = upload;
+
 // ── START SERVER ──
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
